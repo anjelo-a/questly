@@ -106,31 +106,46 @@ final class HomeViewModel: ObservableObject {
     @Published var selectedDate: Date
     @Published var newTaskViewModel: NewTaskViewModel?
 
-    private let taskStore: TaskStore
-    private let calendarClient: CalendarClient
+    private let taskRepository: TaskRepository
+    private let calendarRepository: CalendarRepository
+    private let getPlannerSections: GetPlannerSectionsUseCase
+    private let getWeekDates: GetWeekDatesUseCase
     private var hasLoaded = false
 
     init(
         selectedDate: Date = .now,
         newTaskViewModel: NewTaskViewModel? = nil,
-        taskStore: TaskStore,
-        calendarClient: CalendarClient
+        taskRepository: TaskRepository,
+        calendarRepository: CalendarRepository,
+        getPlannerSections: GetPlannerSectionsUseCase,
+        getWeekDates: GetWeekDatesUseCase
     ) {
         self.selectedDate = selectedDate
         self.newTaskViewModel = newTaskViewModel
-        self.taskStore = taskStore
-        self.calendarClient = calendarClient
+        self.taskRepository = taskRepository
+        self.calendarRepository = calendarRepository
+        self.getPlannerSections = getPlannerSections
+        self.getWeekDates = getWeekDates
     }
 
     convenience init(
         selectedDate: Date = .now,
         newTaskViewModel: NewTaskViewModel? = nil
     ) {
+        let store = TaskStore()
+        let calendarClient = CalendarClient()
+        let taskRepository = TaskRepositoryImpl(store: store)
+        let calendarRepository = CalendarRepositoryImpl(client: calendarClient)
         self.init(
             selectedDate: selectedDate,
             newTaskViewModel: newTaskViewModel,
-            taskStore: TaskStore(),
-            calendarClient: CalendarClient()
+            taskRepository: taskRepository,
+            calendarRepository: calendarRepository,
+            getPlannerSections: DefaultGetPlannerSectionsUseCase(
+                taskRepository: taskRepository,
+                calendarRepository: calendarRepository
+            ),
+            getWeekDates: DefaultGetWeekDatesUseCase()
         )
     }
 
@@ -148,14 +163,7 @@ final class HomeViewModel: ObservableObject {
 
     var dayItems: [HomeDayItem] {
         let calendar = Calendar.current
-        let start = calendar.date(
-            from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: selectedDate)
-        ) ?? selectedDate
-        return (0..<7).compactMap { offset in
-            guard let date = calendar.date(byAdding: .day, value: offset, to: start) else {
-                return nil
-            }
-
+        return getWeekDates.execute(selectedDate: selectedDate).map { date in
             return HomeDayItem(
                 date: date,
                 weekdayText: date.formatted(.dateTime.weekday(.abbreviated)).uppercased(),
@@ -166,13 +174,13 @@ final class HomeViewModel: ObservableObject {
     }
 
     var sections: [HomeSectionModel] {
-        DayPart.plannerParts.map { part in
-            let taskEntries = taskStore.tasks(for: selectedDate, dayPart: part).map {
+        getPlannerSections.execute(date: selectedDate).map { section in
+            let taskEntries = section.tasks.map {
                 HomeSectionEntry.task(
                     HomeTaskRowModel(id: $0.id, title: $0.title, isDone: $0.isDone)
                 )
             }
-            let eventEntries = (calendarClient.eventsByDayPart[part] ?? []).prefix(2).map {
+            let eventEntries = section.events.map {
                 HomeSectionEntry.event(
                     HomeEventRowModel(
                         id: $0.id,
@@ -183,10 +191,10 @@ final class HomeViewModel: ObservableObject {
             }
 
             return HomeSectionModel(
-                part: part,
-                title: part.title,
-                timeRangeText: part.timeRangeText,
-                iconURL: iconURL(for: part),
+                part: section.part,
+                title: section.part.title,
+                timeRangeText: section.part.timeRangeText,
+                iconURL: iconURL(for: section.part),
                 entries: taskEntries + eventEntries
             )
         }
@@ -195,31 +203,24 @@ final class HomeViewModel: ObservableObject {
     func loadIfNeeded() {
         guard !hasLoaded else { return }
         hasLoaded = true
-        taskStore.seedIfNeeded(for: selectedDate)
+        taskRepository.seedIfNeeded(for: selectedDate)
         refreshCalendar(for: selectedDate)
         objectWillChange.send()
     }
 
     func selectDate(_ date: Date) {
         selectedDate = date
-        taskStore.seedIfNeeded(for: date)
+        taskRepository.seedIfNeeded(for: date)
         refreshCalendar(for: date)
     }
 
     func toggleDone(_ id: UUID) {
-        taskStore.toggleDone(id)
+        taskRepository.toggleDone(id)
         objectWillChange.send()
     }
 
     func addTask(_ draft: NewTaskDraft) {
-        taskStore.addTask(
-            title: draft.title,
-            details: draft.details,
-            date: selectedDate,
-            dayPart: draft.dayPart,
-            priority: draft.priority,
-            rewardPoints: draft.rewardPoints
-        )
+        taskRepository.addTask(draft, for: selectedDate)
         objectWillChange.send()
     }
 
@@ -237,7 +238,7 @@ final class HomeViewModel: ObservableObject {
     private func refreshCalendar(for date: Date) {
         guard !isRunningInPreviews else { return }
         Task {
-            await calendarClient.refresh(for: date)
+            await calendarRepository.refresh(for: date)
             objectWillChange.send()
         }
     }
@@ -255,11 +256,11 @@ final class HomeViewModel: ObservableObject {
 private func iconURL(for part: DayPart) -> URL {
     switch part {
     case .morning:
-        URL(string: "https://www.figma.com/api/mcp/asset/b7f43aeb-86da-4f6d-abc2-889bf25e0d22")!
+        URL(string: "https://www.figma.com/api/mcp/asset/c9beefae-a231-42f5-b502-dbe147ee2387")!
     case .midday:
-        URL(string: "https://www.figma.com/api/mcp/asset/ea240abf-4157-4a2e-ada7-8e8aaf60c689")!
+        URL(string: "https://www.figma.com/api/mcp/asset/3e9c3fec-0fe7-4274-a6fe-6d60c6b2b092")!
     case .evening:
-        URL(string: "https://www.figma.com/api/mcp/asset/c14557a5-283a-4e78-8771-4ae7f9c154f5")!
+        URL(string: "https://www.figma.com/api/mcp/asset/ffd2bbae-40a9-4163-b0f4-71635f9770ce")!
     case .inbox:
         URL(string: "https://www.figma.com/api/mcp/asset/90131a9e-37e6-4d41-a19c-ec59ab7c4047")!
     }

@@ -25,18 +25,14 @@ struct HomeView: View {
 						}
 					.padding(.horizontal, 16)
 					.padding(.top, 24)
-					.padding(.bottom, 140)
+					.padding(.bottom, 120)
 				}
 			}
 
 			fab
 				.padding(.trailing, 24)
-				.padding(.bottom, 136)
+				.padding(.bottom, 104)
 				.frame(maxWidth: .infinity, alignment: .trailing)
-
-			bottomNav
-				.padding(.horizontal, 16)
-				.padding(.bottom, 10)
 		}
 			.onAppear {
 				viewModel.loadIfNeeded()
@@ -108,8 +104,9 @@ struct HomeView: View {
 		VStack(spacing: 12) {
 			HStack {
 				HStack(spacing: 8) {
-					RemoteIcon(url: section.iconURL)
-						.frame(width: 20, height: 20)
+					Image(systemName: partSymbolName(section.part))
+						.font(.system(size: 18, weight: .semibold))
+						.foregroundStyle(theme.textSecondary)
 					Text(section.title)
 						.font(theme.subtitleFont)
 						.foregroundStyle(theme.textPrimary)
@@ -140,8 +137,8 @@ struct HomeView: View {
 					viewModel.presentNewTask(for: section.part)
 				} label: {
 					HStack(spacing: 8) {
-						RemoteIcon(url: plusIconURL)
-							.frame(width: 20, height: 20)
+						Image(systemName: "plus")
+							.font(.system(size: 18, weight: .semibold))
 						Text("Add task")
 							.font(.system(size: 16, weight: .medium))
 							.foregroundStyle(theme.textSecondary)
@@ -166,59 +163,16 @@ struct HomeView: View {
 		} label: {
 			ZStack {
 				Circle().fill(theme.accent)
-				RemoteIcon(url: fabIconURL)
-					.frame(width: 24, height: 24)
+				Image(systemName: "plus")
+					.font(.system(size: 20, weight: .bold))
+					.foregroundStyle(.white)
 			}
 			.frame(width: 56, height: 56)
 			.shadow(color: Color.black.opacity(0.12), radius: 10, x: 0, y: 6)
 		}
 		.buttonStyle(.plain)
-	}
-
-	private var bottomNav: some View {
-		VStack(spacing: 0) {
-			HStack(spacing: 0) {
-				navSelectedItem
-				Spacer()
-				navIconButton(url: navIcon2URL)
-				Spacer()
-				navIconButton(url: navIcon3URL)
-				Spacer()
-				navIconButton(url: navIcon4URL)
-				Spacer()
-				navIconButton(url: navIcon5URL)
-			}
-			.frame(height: 56)
-			.padding(.horizontal, 16)
-			.padding(.top, 12)
-		}
-		.frame(height: 80)
-		.frame(maxWidth: .infinity)
-		.background(theme.surface)
-		.clipShape(Capsule())
-		.shadow(color: Color.black.opacity(0.12), radius: 16, x: 0, y: 10)
-	}
-
-	private var navSelectedItem: some View {
-		VStack(spacing: 4) {
-			RemoteIcon(url: navSelectedIconURL)
-				.frame(width: 20, height: 20)
-			Text("Planner")
-				.font(.system(size: 12, weight: .medium))
-				.foregroundStyle(.white)
-		}
-		.frame(width: 68, height: 56)
-		.background(theme.accent)
-		.clipShape(Capsule())
-	}
-
-	private func navIconButton(url: URL) -> some View {
-		Button {} label: {
-			RemoteIcon(url: url)
-				.frame(width: 20, height: 20)
-				.frame(width: 44, height: 36)
-		}
-		.buttonStyle(.plain)
+		.accessibilityLabel(Text("Add task"))
+		.accessibilityHint(Text("Opens the New Task sheet"))
 	}
 }
 
@@ -298,26 +252,28 @@ private struct NewTaskSheet: View {
 							TextField("What do you need to do?", text: $viewModel.title)
 						}
 
-						LabeledInput(label: "DESCRIPTION") {
+						LabeledInput(label: "DESCRIPTION (OPTIONAL)") {
 							TextField("Add details...", text: $viewModel.description, axis: .vertical)
 								.lineLimit(3, reservesSpace: true)
 						}
 
-						SheetSection(label: "WHEN") {
-							LazyVGrid(columns: pillColumns, alignment: .leading, spacing: 12) {
-								ForEach(viewModel.whenOptions) { option in
-									PillButton(
+							SheetSection(label: "WHEN") {
+								LazyVGrid(columns: pillColumns, alignment: .leading, spacing: 12) {
+									ForEach(viewModel.whenOptions) { option in
+										PillButton(
 										title: option.title,
 										iconURL: whenIconURL(for: option),
 										isSelected: viewModel.selectedWhen == option,
 										selectedBackground: theme.accent,
 										unselectedBackground: pillBackgroundColor
 									) {
-										viewModel.selectedWhen = option
+											viewModel.selectedWhen = option
+										}
 									}
 								}
+								.frame(maxWidth: 320)
+								.frame(maxWidth: .infinity, alignment: .center)
 							}
-						}
 
 						SheetSection(label: "PRIORITY") {
 							HStack(spacing: 12) {
@@ -337,8 +293,8 @@ private struct NewTaskSheet: View {
 						SheetSection(label: "POINTS REWARD") {
 							HStack(spacing: 12) {
 								ForEach(viewModel.pointsOptions) { option in
-									PillButton(
-										title: option.title,
+									PointsPillButton(
+										points: option.rawValue,
 										isSelected: viewModel.selectedPoints == option,
 										selectedBackground: theme.warning,
 										unselectedBackground: pillBackgroundColor
@@ -354,7 +310,7 @@ private struct NewTaskSheet: View {
 				.padding(.bottom, 24)
 			}
 
-			PrimaryButton(title: "+ Add Task", isEnabled: viewModel.isSubmissionEnabled) {
+			PrimaryButton(title: "Add Task", isEnabled: viewModel.isSubmissionEnabled) {
 				guard viewModel.addTask() else { return }
 				dismiss()
 			}
@@ -370,7 +326,7 @@ private struct NewTaskSheet: View {
 	private var pillColumns: [GridItem] {
 		[
 			GridItem(.flexible(), spacing: 12),
-			GridItem(.flexible(), spacing: 12)
+			GridItem(.flexible(), spacing: 12),
 		]
 	}
 
@@ -447,24 +403,86 @@ private struct PillButton: View {
 	}
 }
 
+private struct PointsPillButton: View {
+	@Environment(\.appTheme) private var theme
+	let points: Int
+	let isSelected: Bool
+	let selectedBackground: Color
+	let unselectedBackground: Color
+	let action: () -> Void
+
+	var body: some View {
+		Button(action: action) {
+			HStack(spacing: 8) {
+				Image(systemName: "bolt.fill")
+					.font(.system(size: 14, weight: .semibold))
+				Text("\(points)")
+					.font(.system(size: 16, weight: .medium))
+					.lineLimit(1)
+					.minimumScaleFactor(0.9)
+			}
+			.foregroundStyle(isSelected ? .white : theme.textSecondary)
+			.frame(maxWidth: .infinity)
+			.frame(height: 40)
+			.background(isSelected ? selectedBackground : unselectedBackground)
+			.clipShape(Capsule())
+		}
+		.buttonStyle(.plain)
+	}
+}
+
 private struct PrimaryButton: View {
+	@Environment(\.appTheme) private var theme
 	let title: String
 	let isEnabled: Bool
 	let action: () -> Void
 
 	var body: some View {
 		Button(action: action) {
-			Text(title)
-				.font(.system(size: 18, weight: .semibold))
-				.foregroundStyle(.white)
-				.frame(maxWidth: .infinity)
-				.frame(height: 58)
-				.background(Color(red: 0x5B / 255, green: 0x7B / 255, blue: 0xFF / 255))
-				.clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+			HStack(spacing: 10) {
+				Image(systemName: "plus")
+					.font(.system(size: 18, weight: .semibold))
+
+				Text(title)
+					.font(.system(size: 18, weight: .semibold))
+					.lineLimit(1)
+					.minimumScaleFactor(0.9)
+			}
+			.foregroundStyle(.white)
+			.frame(maxWidth: .infinity)
+			.frame(height: 60)
+			.background(theme.accent)
+			.clipShape(Capsule())
 		}
 		.buttonStyle(.plain)
 		.disabled(!isEnabled)
 		.opacity(isEnabled ? 1 : 0.6)
+	}
+}
+
+private func partIconName(_ part: DayPart) -> String {
+	switch part {
+	case .morning:
+		"planner_morning"
+	case .midday:
+		"planner_midday"
+	case .evening:
+		"planner_evening"
+	case .inbox:
+		"inbox_empty"
+	}
+}
+
+private func partSymbolName(_ part: DayPart) -> String {
+	switch part {
+	case .morning:
+		"sun.and.horizon"
+	case .midday:
+		"sun.max"
+	case .evening:
+		"moon.stars"
+	case .inbox:
+		"tray"
 	}
 }
 
@@ -481,35 +499,8 @@ private func whenIconURL(for part: DayPart) -> URL {
 	}
 }
 
-private struct RemoteIcon: View {
-	let url: URL
-
-	var body: some View {
-		AsyncImage(url: url) { phase in
-			switch phase {
-			case .empty:
-				Color.clear
-			case .success(let image):
-				image
-					.resizable()
-					.scaledToFit()
-			case .failure:
-				Color.clear
-			@unknown default:
-				Color.clear
-			}
-		}
-	}
-}
-
-private let plusIconURL = URL(string: "https://www.figma.com/api/mcp/asset/a212cdb6-b229-4f56-82bd-34d26f1eec93")!
-private let fabIconURL = URL(string: "https://www.figma.com/api/mcp/asset/db5a8435-7758-40f9-a630-8d5ea97a2158")!
-
-private let navSelectedIconURL = URL(string: "https://www.figma.com/api/mcp/asset/ce660ce1-7d4d-43a0-af5d-b7d1959485bf")!
-private let navIcon2URL = URL(string: "https://www.figma.com/api/mcp/asset/7de8d47c-cfb7-445f-8469-bfc20119998b")!
-private let navIcon3URL = URL(string: "https://www.figma.com/api/mcp/asset/1e17dc44-04e9-474a-b3b9-884011a4dd3c")!
-private let navIcon4URL = URL(string: "https://www.figma.com/api/mcp/asset/833b7830-cf68-4c9f-baae-1d31594d75c8")!
-private let navIcon5URL = URL(string: "https://www.figma.com/api/mcp/asset/953466cf-230e-4ec2-977f-0441635d1db6")!
+private let plusIconURL = URL(string: "https://www.figma.com/api/mcp/asset/989cbe21-9303-4195-8d60-245831ac6b20")!
+private let fabIconURL = URL(string: "https://www.figma.com/api/mcp/asset/14333ba5-662d-4194-9a97-d376a1640048")!
 
 private let whenIconMorningURL = URL(string: "https://www.figma.com/api/mcp/asset/e5544835-578d-43cb-a150-c9664727a984")!
 private let whenIconMiddayURL = URL(string: "https://www.figma.com/api/mcp/asset/bdd8c1df-09c7-4c74-981a-0a3d6e2cb4de")!

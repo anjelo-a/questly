@@ -14,10 +14,40 @@
 		001000000000000000000005 /* CalendarClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001000000000000000000105 /* CalendarClient.swift */; };
 		001000000000000000000006 /* TaskStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001000000000000000000106 /* TaskStore.swift */; };
 		D13091452F68673800458415 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13091442F68673800458415 /* HomeViewModel.swift */; };
+		D14B0A402F9B1F0000BEEF01 /* RootTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D14B0A3F2F9B1F0000BEEF01 /* RootTabView.swift */; };
+		D14B0A422F9B1F0000BEEF01 /* RemoteIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = D14B0A412F9B1F0000BEEF01 /* RemoteIcon.swift */; };
+		D14B0A762F9B212000BEEF01 /* ImportedIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = D14B0A742F9B212000BEEF01 /* ImportedIcon.swift */; };
+		D14B0A442F9B1F0000BEEF01 /* FocusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D14B0A432F9B1F0000BEEF01 /* FocusView.swift */; };
+		D14B0A462F9B1F0000BEEF01 /* HabitsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D14B0A452F9B1F0000BEEF01 /* HabitsView.swift */; };
+		D14B0A482F9B1F0000BEEF01 /* PortfolioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D14B0A472F9B1F0000BEEF01 /* PortfolioView.swift */; };
+		D14B0A4A2F9B1F0000BEEF01 /* MoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D14B0A492F9B1F0000BEEF01 /* MoreView.swift */; };
+		D14B0A582F9B204000BEEF01 /* WishesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D14B0A572F9B204000BEEF01 /* WishesView.swift */; };
+		D14B0A5A2F9B204000BEEF01 /* InboxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D14B0A592F9B204000BEEF01 /* InboxView.swift */; };
+		D14B0A4C2F9B1F5000BEEF01 /* TaskRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = D14B0A4B2F9B1F5000BEEF01 /* TaskRepository.swift */; };
+		D14B0A4E2F9B1F5000BEEF01 /* CalendarRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = D14B0A4D2F9B1F5000BEEF01 /* CalendarRepository.swift */; };
+		D14B0A502F9B1F5000BEEF01 /* GetPlannerSectionsUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D14B0A4F2F9B1F5000BEEF01 /* GetPlannerSectionsUseCase.swift */; };
+		D14B0A522F9B1F5000BEEF01 /* GetWeekDatesUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D14B0A512F9B1F5000BEEF01 /* GetWeekDatesUseCase.swift */; };
+		D14B0A542F9B1F5000BEEF01 /* TaskRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = D14B0A532F9B1F5000BEEF01 /* TaskRepositoryImpl.swift */; };
+		D14B0A562F9B1F5000BEEF01 /* CalendarRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = D14B0A552F9B1F5000BEEF01 /* CalendarRepositoryImpl.swift */; };
+		D13A5A7E2F9B1A1E00BEEF01 /* plus.svg.png in Resources */ = {isa = PBXBuildFile; fileRef = D13A5A7D2F9B1A1E00BEEF01 /* plus.svg.png */; };
+		D14B0A5C2F9B210000BEEF01 /* tab_planner.png in Resources */ = {isa = PBXBuildFile; fileRef = D14B0A5B2F9B210000BEEF01 /* tab_planner.png */; };
+		D14B0A5E2F9B210000BEEF01 /* tab_focus.png in Resources */ = {isa = PBXBuildFile; fileRef = D14B0A5D2F9B210000BEEF01 /* tab_focus.png */; };
+		D14B0A602F9B210000BEEF01 /* tab_habits.png in Resources */ = {isa = PBXBuildFile; fileRef = D14B0A5F2F9B210000BEEF01 /* tab_habits.png */; };
+		D14B0A622F9B210000BEEF01 /* tab_portfolio.png in Resources */ = {isa = PBXBuildFile; fileRef = D14B0A612F9B210000BEEF01 /* tab_portfolio.png */; };
+		D14B0A642F9B210000BEEF01 /* tab_more.png in Resources */ = {isa = PBXBuildFile; fileRef = D14B0A632F9B210000BEEF01 /* tab_more.png */; };
+		D14B0A662F9B210000BEEF01 /* planner_fab.png in Resources */ = {isa = PBXBuildFile; fileRef = D14B0A652F9B210000BEEF01 /* planner_fab.png */; };
+		D14B0A682F9B210000BEEF01 /* planner_addtask.png in Resources */ = {isa = PBXBuildFile; fileRef = D14B0A672F9B210000BEEF01 /* planner_addtask.png */; };
+		D14B0A6A2F9B210000BEEF01 /* planner_morning.png in Resources */ = {isa = PBXBuildFile; fileRef = D14B0A692F9B210000BEEF01 /* planner_morning.png */; };
+		D14B0A6C2F9B210000BEEF01 /* planner_midday.png in Resources */ = {isa = PBXBuildFile; fileRef = D14B0A6B2F9B210000BEEF01 /* planner_midday.png */; };
+		D14B0A6E2F9B210000BEEF01 /* planner_evening.png in Resources */ = {isa = PBXBuildFile; fileRef = D14B0A6D2F9B210000BEEF01 /* planner_evening.png */; };
+		D14B0A702F9B210000BEEF01 /* chevron_right.png in Resources */ = {isa = PBXBuildFile; fileRef = D14B0A6F2F9B210000BEEF01 /* chevron_right.png */; };
+		D14B0A722F9B210000BEEF01 /* inbox_empty.png in Resources */ = {isa = PBXBuildFile; fileRef = D14B0A712F9B210000BEEF01 /* inbox_empty.png */; };
+		D14B0A782F9B220000BEEF01 /* UseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D14B0A772F9B220000BEEF01 /* UseCaseTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		001000000000000000000010 /* ToDoPlanner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoPlanner.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D14B0A792F9B220000BEEF01 /* ToDoPlannerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ToDoPlannerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		001000000000000000000020 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		001000000000000000000101 /* ToDoPlannerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoPlannerApp.swift; sourceTree = "<group>"; };
 		001000000000000000000102 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -26,7 +56,54 @@
 		001000000000000000000105 /* CalendarClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarClient.swift; sourceTree = "<group>"; };
 		001000000000000000000106 /* TaskStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskStore.swift; sourceTree = "<group>"; };
 		D13091442F68673800458415 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
+		D14B0A3F2F9B1F0000BEEF01 /* RootTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Presentation/RootTabView.swift; sourceTree = "<group>"; };
+		D14B0A412F9B1F0000BEEF01 /* RemoteIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Presentation/Shared/RemoteIcon.swift; sourceTree = "<group>"; };
+		D14B0A742F9B212000BEEF01 /* ImportedIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Presentation/Shared/ImportedIcon.swift; sourceTree = "<group>"; };
+		D14B0A432F9B1F0000BEEF01 /* FocusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Presentation/Focus/FocusView.swift; sourceTree = "<group>"; };
+		D14B0A452F9B1F0000BEEF01 /* HabitsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Presentation/Habits/HabitsView.swift; sourceTree = "<group>"; };
+		D14B0A472F9B1F0000BEEF01 /* PortfolioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Presentation/Portfolio/PortfolioView.swift; sourceTree = "<group>"; };
+		D14B0A492F9B1F0000BEEF01 /* MoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Presentation/More/MoreView.swift; sourceTree = "<group>"; };
+		D14B0A572F9B204000BEEF01 /* WishesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Presentation/Wishes/WishesView.swift; sourceTree = "<group>"; };
+		D14B0A592F9B204000BEEF01 /* InboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Presentation/Inbox/InboxView.swift; sourceTree = "<group>"; };
+		D14B0A4B2F9B1F5000BEEF01 /* TaskRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Domain/Repositories/TaskRepository.swift; sourceTree = "<group>"; };
+		D14B0A4D2F9B1F5000BEEF01 /* CalendarRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Domain/Repositories/CalendarRepository.swift; sourceTree = "<group>"; };
+		D14B0A4F2F9B1F5000BEEF01 /* GetPlannerSectionsUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Domain/UseCases/GetPlannerSectionsUseCase.swift; sourceTree = "<group>"; };
+		D14B0A512F9B1F5000BEEF01 /* GetWeekDatesUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Domain/UseCases/GetWeekDatesUseCase.swift; sourceTree = "<group>"; };
+		D14B0A532F9B1F5000BEEF01 /* TaskRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data/Repositories/TaskRepositoryImpl.swift; sourceTree = "<group>"; };
+		D14B0A552F9B1F5000BEEF01 /* CalendarRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data/Repositories/CalendarRepositoryImpl.swift; sourceTree = "<group>"; };
+		D13A5A7D2F9B1A1E00BEEF01 /* plus.svg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Resources/Icons/plus.svg.png"; sourceTree = "<group>"; };
+		D14B0A5B2F9B210000BEEF01 /* tab_planner.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Resources/Icons/tab_planner.png"; sourceTree = "<group>"; };
+		D14B0A5D2F9B210000BEEF01 /* tab_focus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Resources/Icons/tab_focus.png"; sourceTree = "<group>"; };
+		D14B0A5F2F9B210000BEEF01 /* tab_habits.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Resources/Icons/tab_habits.png"; sourceTree = "<group>"; };
+		D14B0A612F9B210000BEEF01 /* tab_portfolio.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Resources/Icons/tab_portfolio.png"; sourceTree = "<group>"; };
+		D14B0A632F9B210000BEEF01 /* tab_more.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Resources/Icons/tab_more.png"; sourceTree = "<group>"; };
+		D14B0A652F9B210000BEEF01 /* planner_fab.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Resources/Icons/planner_fab.png"; sourceTree = "<group>"; };
+		D14B0A672F9B210000BEEF01 /* planner_addtask.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Resources/Icons/planner_addtask.png"; sourceTree = "<group>"; };
+		D14B0A692F9B210000BEEF01 /* planner_morning.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Resources/Icons/planner_morning.png"; sourceTree = "<group>"; };
+		D14B0A6B2F9B210000BEEF01 /* planner_midday.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Resources/Icons/planner_midday.png"; sourceTree = "<group>"; };
+		D14B0A6D2F9B210000BEEF01 /* planner_evening.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Resources/Icons/planner_evening.png"; sourceTree = "<group>"; };
+		D14B0A6F2F9B210000BEEF01 /* chevron_right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Resources/Icons/chevron_right.png"; sourceTree = "<group>"; };
+		D14B0A712F9B210000BEEF01 /* inbox_empty.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Resources/Icons/inbox_empty.png"; sourceTree = "<group>"; };
+		D14B0A772F9B220000BEEF01 /* UseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoPlannerTests/UseCaseTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXContainerItemProxy section */
+		D14B0A7A2F9B220000BEEF01 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 001000000000000000000100 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 001000000000000000000700;
+			remoteInfo = ToDoPlanner;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXTargetDependency section */
+		D14B0A7B2F9B220000BEEF01 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 001000000000000000000700 /* ToDoPlanner */;
+			targetProxy = D14B0A7A2F9B220000BEEF01 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		001000000000000000000300 /* Frameworks */ = {
@@ -43,6 +120,7 @@
 			isa = PBXGroup;
 			children = (
 				001000000000000000000500 /* ToDoPlanner */,
+				D14B0A7C2F9B220000BEEF01 /* ToDoPlannerTests */,
 				001000000000000000000600 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -51,6 +129,21 @@
 			isa = PBXGroup;
 			children = (
 				001000000000000000000101 /* ToDoPlannerApp.swift */,
+				D14B0A3F2F9B1F0000BEEF01 /* RootTabView.swift */,
+				D14B0A412F9B1F0000BEEF01 /* RemoteIcon.swift */,
+				D14B0A742F9B212000BEEF01 /* ImportedIcon.swift */,
+				D14B0A432F9B1F0000BEEF01 /* FocusView.swift */,
+				D14B0A452F9B1F0000BEEF01 /* HabitsView.swift */,
+				D14B0A472F9B1F0000BEEF01 /* PortfolioView.swift */,
+				D14B0A492F9B1F0000BEEF01 /* MoreView.swift */,
+				D14B0A572F9B204000BEEF01 /* WishesView.swift */,
+				D14B0A592F9B204000BEEF01 /* InboxView.swift */,
+				D14B0A4B2F9B1F5000BEEF01 /* TaskRepository.swift */,
+				D14B0A4D2F9B1F5000BEEF01 /* CalendarRepository.swift */,
+				D14B0A4F2F9B1F5000BEEF01 /* GetPlannerSectionsUseCase.swift */,
+				D14B0A512F9B1F5000BEEF01 /* GetWeekDatesUseCase.swift */,
+				D14B0A532F9B1F5000BEEF01 /* TaskRepositoryImpl.swift */,
+				D14B0A552F9B1F5000BEEF01 /* CalendarRepositoryImpl.swift */,
 				001000000000000000000102 /* HomeView.swift */,
 				001000000000000000000106 /* TaskStore.swift */,
 				001000000000000000000105 /* CalendarClient.swift */,
@@ -58,6 +151,19 @@
 				001000000000000000000104 /* AppTheme.swift */,
 				001000000000000000000020 /* Info.plist */,
 				D13091442F68673800458415 /* HomeViewModel.swift */,
+				D13A5A7D2F9B1A1E00BEEF01 /* plus.svg.png */,
+				D14B0A5B2F9B210000BEEF01 /* tab_planner.png */,
+				D14B0A5D2F9B210000BEEF01 /* tab_focus.png */,
+				D14B0A5F2F9B210000BEEF01 /* tab_habits.png */,
+				D14B0A612F9B210000BEEF01 /* tab_portfolio.png */,
+				D14B0A632F9B210000BEEF01 /* tab_more.png */,
+				D14B0A652F9B210000BEEF01 /* planner_fab.png */,
+				D14B0A672F9B210000BEEF01 /* planner_addtask.png */,
+				D14B0A692F9B210000BEEF01 /* planner_morning.png */,
+				D14B0A6B2F9B210000BEEF01 /* planner_midday.png */,
+				D14B0A6D2F9B210000BEEF01 /* planner_evening.png */,
+				D14B0A6F2F9B210000BEEF01 /* chevron_right.png */,
+				D14B0A712F9B210000BEEF01 /* inbox_empty.png */,
 			);
 			path = ToDoPlanner;
 			sourceTree = "<group>";
@@ -66,8 +172,17 @@
 			isa = PBXGroup;
 			children = (
 				001000000000000000000010 /* ToDoPlanner.app */,
+				D14B0A792F9B220000BEEF01 /* ToDoPlannerTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		D14B0A7C2F9B220000BEEF01 /* ToDoPlannerTests */ = {
+			isa = PBXGroup;
+			children = (
+				D14B0A772F9B220000BEEF01 /* UseCaseTests.swift */,
+			);
+			path = ToDoPlannerTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -89,6 +204,24 @@
 			productName = ToDoPlanner;
 			productReference = 001000000000000000000010 /* ToDoPlanner.app */;
 			productType = "com.apple.product-type.application";
+		};
+		D14B0A7D2F9B220000BEEF01 /* ToDoPlannerTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D14B0A7E2F9B220000BEEF01 /* Build configuration list for PBXNativeTarget "ToDoPlannerTests" */;
+			buildPhases = (
+				D14B0A7F2F9B220000BEEF01 /* Sources */,
+				D14B0A802F9B220000BEEF01 /* Frameworks */,
+				D14B0A812F9B220000BEEF01 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D14B0A7B2F9B220000BEEF01 /* PBXTargetDependency */,
+			);
+			name = ToDoPlannerTests;
+			productName = ToDoPlannerTests;
+			productReference = D14B0A792F9B220000BEEF01 /* ToDoPlannerTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -119,15 +252,95 @@
 			projectRoot = "";
 			targets = (
 				001000000000000000000700 /* ToDoPlanner */,
+				D14B0A7D2F9B220000BEEF01 /* ToDoPlannerTests */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D14B0A802F9B220000BEEF01 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D14B0A812F9B220000BEEF01 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D14B0A7F2F9B220000BEEF01 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D14B0A782F9B220000BEEF01 /* UseCaseTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		D14B0A822F9B220000BEEF01 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ToDoPlanner.app/ToDoPlanner";
+			};
+			name = Debug;
+		};
+		D14B0A832F9B220000BEEF01 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ToDoPlanner.app/ToDoPlanner";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D14B0A7E2F9B220000BEEF01 /* Build configuration list for PBXNativeTarget "ToDoPlannerTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D14B0A822F9B220000BEEF01 /* Debug */,
+				D14B0A832F9B220000BEEF01 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
 
 /* Begin PBXResourcesBuildPhase section */
 		001000000000000000000800 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D13A5A7E2F9B1A1E00BEEF01 /* plus.svg.png in Resources */,
+				D14B0A5C2F9B210000BEEF01 /* tab_planner.png in Resources */,
+				D14B0A5E2F9B210000BEEF01 /* tab_focus.png in Resources */,
+				D14B0A602F9B210000BEEF01 /* tab_habits.png in Resources */,
+				D14B0A622F9B210000BEEF01 /* tab_portfolio.png in Resources */,
+				D14B0A642F9B210000BEEF01 /* tab_more.png in Resources */,
+				D14B0A662F9B210000BEEF01 /* planner_fab.png in Resources */,
+				D14B0A682F9B210000BEEF01 /* planner_addtask.png in Resources */,
+				D14B0A6A2F9B210000BEEF01 /* planner_morning.png in Resources */,
+				D14B0A6C2F9B210000BEEF01 /* planner_midday.png in Resources */,
+				D14B0A6E2F9B210000BEEF01 /* planner_evening.png in Resources */,
+				D14B0A702F9B210000BEEF01 /* chevron_right.png in Resources */,
+				D14B0A722F9B210000BEEF01 /* inbox_empty.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -139,8 +352,23 @@
 			buildActionMask = 2147483647;
 			files = (
 				001000000000000000000001 /* ToDoPlannerApp.swift in Sources */,
+				D14B0A402F9B1F0000BEEF01 /* RootTabView.swift in Sources */,
+				D14B0A422F9B1F0000BEEF01 /* RemoteIcon.swift in Sources */,
+				D14B0A762F9B212000BEEF01 /* ImportedIcon.swift in Sources */,
+				D14B0A442F9B1F0000BEEF01 /* FocusView.swift in Sources */,
+				D14B0A462F9B1F0000BEEF01 /* HabitsView.swift in Sources */,
+				D14B0A482F9B1F0000BEEF01 /* PortfolioView.swift in Sources */,
+				D14B0A4A2F9B1F0000BEEF01 /* MoreView.swift in Sources */,
+				D14B0A582F9B204000BEEF01 /* WishesView.swift in Sources */,
+				D14B0A5A2F9B204000BEEF01 /* InboxView.swift in Sources */,
 				001000000000000000000002 /* HomeView.swift in Sources */,
 				D13091452F68673800458415 /* HomeViewModel.swift in Sources */,
+				D14B0A4C2F9B1F5000BEEF01 /* TaskRepository.swift in Sources */,
+				D14B0A4E2F9B1F5000BEEF01 /* CalendarRepository.swift in Sources */,
+				D14B0A502F9B1F5000BEEF01 /* GetPlannerSectionsUseCase.swift in Sources */,
+				D14B0A522F9B1F5000BEEF01 /* GetWeekDatesUseCase.swift in Sources */,
+				D14B0A542F9B1F5000BEEF01 /* TaskRepositoryImpl.swift in Sources */,
+				D14B0A562F9B1F5000BEEF01 /* CalendarRepositoryImpl.swift in Sources */,
 				001000000000000000000006 /* TaskStore.swift in Sources */,
 				001000000000000000000005 /* CalendarClient.swift in Sources */,
 				001000000000000000000003 /* Models.swift in Sources */,
