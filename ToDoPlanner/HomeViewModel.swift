@@ -1,6 +1,25 @@
 import Foundation
 import SwiftUI
 
+enum HomeTaskCompletionFilter: String, CaseIterable, Identifiable, Hashable {
+    case all
+    case active
+    case completed
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .all:
+            "All"
+        case .active:
+            "Active"
+        case .completed:
+            "Completed"
+        }
+    }
+}
+
 struct HomeDayItem: Identifiable, Hashable {
     let date: Date
     let weekdayText: String
@@ -276,6 +295,15 @@ final class HomeViewModel: ObservableObject {
     @Published var selectedDate: Date
     @Published var newTaskViewModel: NewTaskViewModel?
     @Published var editTaskViewModel: EditTaskViewModel?
+    @Published var searchText: String = "" {
+        didSet { refreshSectionsForDiscoveryState() }
+    }
+    @Published var completionFilter: HomeTaskCompletionFilter = .all {
+        didSet { refreshSectionsForDiscoveryState() }
+    }
+    @Published var priorityFilter: TaskPriority? {
+        didSet { refreshSectionsForDiscoveryState() }
+    }
     @Published private(set) var sections: [HomeSectionModel] = []
     @Published private(set) var persistenceMessage: String?
 
@@ -344,6 +372,14 @@ final class HomeViewModel: ObservableObject {
                 isSelected: calendar.isDate(date, inSameDayAs: selectedDate)
             )
         }
+    }
+
+    var completionFilterOptions: [HomeTaskCompletionFilter] {
+        HomeTaskCompletionFilter.allCases
+    }
+
+    var priorityFilterTitle: String {
+        priorityFilter?.title ?? "All priorities"
     }
 
     func loadIfNeeded() {
@@ -431,22 +467,23 @@ final class HomeViewModel: ObservableObject {
 
     private func reloadSections(animated: Bool = true) {
         let newSections = getPlannerSections.execute(date: selectedDate).map { section in
-            let taskEntries = section.tasks.map {
-                HomeSectionEntry.task(
-                    HomeTaskRowModel(
-                        id: $0.id,
-                        title: $0.title,
-                        details: $0.details,
-                        isDone: $0.isDone,
-                        dueDate: $0.dueDate,
-                        dayPart: $0.dayPart,
-                        priority: $0.priority,
-                        rewardPoints: $0.rewardPoints,
-                        reminderDate: $0.reminderDate,
-                        recurrence: $0.recurrence
-                    )
+            let allTaskRows = section.tasks.map {
+                HomeTaskRowModel(
+                    id: $0.id,
+                    title: $0.title,
+                    details: $0.details,
+                    isDone: $0.isDone,
+                    dueDate: $0.dueDate,
+                    dayPart: $0.dayPart,
+                    priority: $0.priority,
+                    rewardPoints: $0.rewardPoints,
+                    reminderDate: $0.reminderDate,
+                    recurrence: $0.recurrence
                 )
             }
+            let taskEntries = allTaskRows
+                .filter(matchesFilters)
+                .map { HomeSectionEntry.task($0) }
             let eventEntries = section.events.map {
                 HomeSectionEntry.event(
                     HomeEventRowModel(
@@ -473,6 +510,39 @@ final class HomeViewModel: ObservableObject {
         } else {
             sections = newSections
         }
+    }
+
+    private func refreshSectionsForDiscoveryState() {
+        guard hasLoaded else { return }
+        reloadSections(animated: false)
+    }
+
+    private func matchesFilters(_ task: HomeTaskRowModel) -> Bool {
+        switch completionFilter {
+        case .all:
+            break
+        case .active:
+            guard !task.isDone else { return false }
+        case .completed:
+            guard task.isDone else { return false }
+        }
+
+        if let priorityFilter, task.priority != priorityFilter {
+            return false
+        }
+
+        let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !query.isEmpty else { return true }
+
+        if task.title.localizedCaseInsensitiveContains(query) {
+            return true
+        }
+
+        if let details = task.details, details.localizedCaseInsensitiveContains(query) {
+            return true
+        }
+
+        return false
     }
 
     private func syncPersistenceState() {

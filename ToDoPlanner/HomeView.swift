@@ -14,6 +14,10 @@ struct HomeView: View {
 					.padding(.horizontal, 16)
 					.padding(.top, 16)
 
+				discoveryControls
+					.padding(.horizontal, 16)
+					.padding(.top, 12)
+
 				if let persistenceMessage = viewModel.persistenceMessage {
 					persistenceBanner(message: persistenceMessage)
 						.padding(.horizontal, 16)
@@ -84,6 +88,73 @@ struct HomeView: View {
 			.clipShape(Capsule())
 		}
 		.frame(height: 60)
+	}
+
+	private var discoveryControls: some View {
+		VStack(spacing: 10) {
+			HStack(spacing: 10) {
+				Image(systemName: "magnifyingglass")
+					.font(.system(size: 15, weight: .semibold))
+					.foregroundStyle(theme.textSecondary)
+
+				TextField("Search tasks", text: $viewModel.searchText)
+					textInputAutocapitalization(.never)
+					.autocorrectionDisabled()
+
+				if !viewModel.searchText.isEmpty {
+					Button {
+						viewModel.searchText = ""
+					} label: {
+						Image(systemName: "xmark.circle.fill")
+							.foregroundStyle(theme.textSecondary)
+					}
+					.buttonStyle(.plain)
+					.accessibilityLabel(Text("Clear search text"))
+				}
+			}
+			.padding(.horizontal, 12)
+			.frame(height: 42)
+			.background(theme.surface)
+			.clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+
+			HStack(spacing: 10) {
+				Picker("Task status", selection: $viewModel.completionFilter) {
+					ForEach(viewModel.completionFilterOptions) { option in
+						Text(option.title).tag(option)
+					}
+				}
+				.pickerStyle(.segmented)
+
+				Menu {
+					Button("All priorities") {
+						viewModel.priorityFilter = nil
+					}
+					ForEach(TaskPriority.allCases) { priority in
+						Button {
+							viewModel.priorityFilter = priority
+						} label: {
+							if viewModel.priorityFilter == priority {
+								Label(priority.title, systemImage: "checkmark")
+							} else {
+								Text(priority.title)
+							}
+						}
+					}
+				} label: {
+					HStack(spacing: 6) {
+						Image(systemName: "line.3.horizontal.decrease.circle")
+						Text(viewModel.priorityFilterTitle)
+							.lineLimit(1)
+					}
+					.font(.system(size: 14, weight: .medium))
+					.foregroundStyle(theme.textPrimary)
+					.padding(.horizontal, 10)
+					.frame(height: 32)
+					.background(theme.surface)
+					.clipShape(Capsule())
+				}
+			}
+		}
 	}
 
 	private var dateStrip: some View {
