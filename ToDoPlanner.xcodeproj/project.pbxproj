@@ -13,6 +13,7 @@
 		001000000000000000000004 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001000000000000000000104 /* AppTheme.swift */; };
 		001000000000000000000005 /* CalendarClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001000000000000000000105 /* CalendarClient.swift */; };
 		001000000000000000000006 /* TaskStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001000000000000000000106 /* TaskStore.swift */; };
+		001000000000000000000007 /* TaskPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001000000000000000000107 /* TaskPersistence.swift */; };
 		D13091452F68673800458415 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13091442F68673800458415 /* HomeViewModel.swift */; };
 		D14B0A402F9B1F0000BEEF01 /* RootTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D14B0A3F2F9B1F0000BEEF01 /* RootTabView.swift */; };
 		D14B0A422F9B1F0000BEEF01 /* RemoteIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = D14B0A412F9B1F0000BEEF01 /* RemoteIcon.swift */; };
@@ -55,6 +56,7 @@
 		001000000000000000000104 /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
 		001000000000000000000105 /* CalendarClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarClient.swift; sourceTree = "<group>"; };
 		001000000000000000000106 /* TaskStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskStore.swift; sourceTree = "<group>"; };
+		001000000000000000000107 /* TaskPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskPersistence.swift; sourceTree = "<group>"; };
 		D13091442F68673800458415 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		D14B0A3F2F9B1F0000BEEF01 /* RootTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Presentation/RootTabView.swift; sourceTree = "<group>"; };
 		D14B0A412F9B1F0000BEEF01 /* RemoteIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Presentation/Shared/RemoteIcon.swift; sourceTree = "<group>"; };
@@ -146,6 +148,7 @@
 				D14B0A552F9B1F5000BEEF01 /* CalendarRepositoryImpl.swift */,
 				001000000000000000000102 /* HomeView.swift */,
 				001000000000000000000106 /* TaskStore.swift */,
+				001000000000000000000107 /* TaskPersistence.swift */,
 				001000000000000000000105 /* CalendarClient.swift */,
 				001000000000000000000103 /* Models.swift */,
 				001000000000000000000104 /* AppTheme.swift */,
@@ -370,6 +373,7 @@
 				D14B0A542F9B1F5000BEEF01 /* TaskRepositoryImpl.swift in Sources */,
 				D14B0A562F9B1F5000BEEF01 /* CalendarRepositoryImpl.swift in Sources */,
 				001000000000000000000006 /* TaskStore.swift in Sources */,
+				001000000000000000000007 /* TaskPersistence.swift in Sources */,
 				001000000000000000000005 /* CalendarClient.swift in Sources */,
 				001000000000000000000003 /* Models.swift in Sources */,
 				001000000000000000000004 /* AppTheme.swift in Sources */,

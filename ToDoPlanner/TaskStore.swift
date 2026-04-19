@@ -4,6 +4,12 @@ import SwiftUI
 @MainActor
 final class TaskStore: ObservableObject {
 	@Published private(set) var tasks: [TodoItem] = []
+	private let persistence: TaskPersistence
+
+	init(persistence: TaskPersistence = TaskPersistence()) {
+		self.persistence = persistence
+		self.tasks = persistence.loadTasks()
+	}
 
 	func tasks(for date: Date, dayPart: DayPart) -> [TodoItem] {
 		let cal = Calendar.current
@@ -37,17 +43,20 @@ final class TaskStore: ObservableObject {
 				rewardPoints: rewardPoints
 			)
 		)
+		persistTasks()
 	}
 
 	func toggleDone(_ id: UUID) {
 		guard let idx = tasks.firstIndex(where: { $0.id == id }) else { return }
 		tasks[idx].isDone.toggle()
+		persistTasks()
 	}
 
 	func moveTask(_ id: UUID, to dayPart: DayPart, for date: Date) {
 		guard let idx = tasks.firstIndex(where: { $0.id == id }) else { return }
 		tasks[idx].dayPart = dayPart
 		tasks[idx].dueDate = dueDate(for: dayPart, on: date)
+		persistTasks()
 	}
 
 	func seedIfNeeded(for date: Date) {
@@ -65,6 +74,10 @@ final class TaskStore: ObservableObject {
 
 		let hour = dayPart.hours.lowerBound
 		return cal.date(bySettingHour: hour, minute: 0, second: 0, of: date) ?? date
+	}
+
+	private func persistTasks() {
+		persistence.saveTasks(tasks)
 	}
 }
 

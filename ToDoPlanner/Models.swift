@@ -1,6 +1,6 @@
 import Foundation
 
-enum DayPart: String, CaseIterable, Identifiable, Hashable {
+enum DayPart: String, CaseIterable, Identifiable, Hashable, Codable {
 	case morning
 	case midday
 	case evening
@@ -40,7 +40,7 @@ enum DayPart: String, CaseIterable, Identifiable, Hashable {
 	}
 }
 
-enum TaskPriority: String, CaseIterable, Identifiable, Hashable {
+enum TaskPriority: String, CaseIterable, Identifiable, Hashable, Codable {
 	case low
 	case medium
 	case high
@@ -56,7 +56,7 @@ enum TaskPriority: String, CaseIterable, Identifiable, Hashable {
 	}
 }
 
-enum TaskRewardPoints: Int, CaseIterable, Identifiable, Hashable {
+enum TaskRewardPoints: Int, CaseIterable, Identifiable, Hashable, Codable {
 	case p15 = 15
 	case p25 = 25
 	case p50 = 50
@@ -67,7 +67,7 @@ enum TaskRewardPoints: Int, CaseIterable, Identifiable, Hashable {
 	var title: String { "⚡ \(rawValue)" }
 }
 
-struct TodoItem: Identifiable, Hashable {
+struct TodoItem: Identifiable, Hashable, Codable {
 	let id: UUID
 	var title: String
 	var details: String?
