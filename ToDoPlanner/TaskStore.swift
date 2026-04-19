@@ -77,6 +77,12 @@ final class TaskStore: ObservableObject {
 		persistTasks()
 	}
 
+	func deleteTask(_ id: UUID) {
+		guard let idx = tasks.firstIndex(where: { $0.id == id }) else { return }
+		tasks.remove(at: idx)
+		persistTasks()
+	}
+
 	func moveTask(_ id: UUID, to dayPart: DayPart, for date: Date) {
 		guard let idx = tasks.firstIndex(where: { $0.id == id }) else { return }
 		tasks[idx].dayPart = dayPart

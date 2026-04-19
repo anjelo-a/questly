@@ -243,7 +243,7 @@ final class HomeViewModel: ObservableObject {
         guard !hasLoaded else { return }
         hasLoaded = true
         taskRepository.seedIfNeeded(for: selectedDate)
-        reloadSections()
+        reloadSections(animated: false)
         syncPersistenceState()
         refreshCalendar(for: selectedDate)
     }
@@ -251,7 +251,7 @@ final class HomeViewModel: ObservableObject {
     func selectDate(_ date: Date) {
         selectedDate = date
         taskRepository.seedIfNeeded(for: date)
-        reloadSections()
+        reloadSections(animated: false)
         syncPersistenceState()
         refreshCalendar(for: date)
     }
@@ -270,6 +270,12 @@ final class HomeViewModel: ObservableObject {
 
     func editTask(_ id: UUID, with draft: EditTaskDraft) {
         taskRepository.updateTask(id, with: draft, for: selectedDate)
+        reloadSections()
+        syncPersistenceState()
+    }
+
+    func deleteTask(_ id: UUID) {
+        taskRepository.deleteTask(id)
         reloadSections()
         syncPersistenceState()
     }
@@ -306,12 +312,12 @@ final class HomeViewModel: ObservableObject {
         guard !isRunningInPreviews else { return }
         Task {
             await calendarRepository.refresh(for: date)
-            reloadSections()
+            reloadSections(animated: false)
         }
     }
 
-    private func reloadSections() {
-        sections = getPlannerSections.execute(date: selectedDate).map { section in
+    private func reloadSections(animated: Bool = true) {
+        let newSections = getPlannerSections.execute(date: selectedDate).map { section in
             let taskEntries = section.tasks.map {
                 HomeSectionEntry.task(
                     HomeTaskRowModel(
@@ -342,6 +348,14 @@ final class HomeViewModel: ObservableObject {
                 iconURL: iconURL(for: section.part),
                 entries: taskEntries + eventEntries
             )
+        }
+
+        if animated {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                sections = newSections
+            }
+        } else {
+            sections = newSections
         }
     }
 

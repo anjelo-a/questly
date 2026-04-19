@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct HomeView: View {
 	@Environment(\.appTheme) private var theme
@@ -139,6 +140,8 @@ struct HomeView: View {
 								viewModel.toggleDone(item.id)
 							} onEdit: {
 								viewModel.presentEditTask(item)
+							} onDelete: {
+								viewModel.deleteTask(item.id)
 							} onMove: { dayPart in
 								viewModel.moveTask(item.id, to: dayPart)
 							}
@@ -216,12 +219,16 @@ private struct TaskRow: View {
 	let currentPart: DayPart
 	let onToggle: () -> Void
 	let onEdit: () -> Void
+	let onDelete: () -> Void
 	let onMove: (DayPart) -> Void
 	@State private var showingMoveOptions = false
 
 	var body: some View {
 		HStack(spacing: 10) {
-			Button(action: onToggle) {
+			Button {
+				onToggle()
+				Haptics.success()
+			} label: {
 				HStack(spacing: 10) {
 					Image(systemName: item.isDone ? "checkmark.circle.fill" : "circle")
 						.foregroundStyle(item.isDone ? theme.accent : theme.textSecondary)
@@ -249,6 +256,23 @@ private struct TaskRow: View {
 		.padding(.vertical, 10)
 		.background(item.isDone ? theme.surfaceAlt : theme.surface)
 		.clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+		.swipeActions(edge: .leading, allowsFullSwipe: true) {
+			Button {
+				onToggle()
+				Haptics.success()
+			} label: {
+				Label(item.isDone ? "Undo" : "Complete", systemImage: item.isDone ? "arrow.uturn.backward.circle.fill" : "checkmark.circle.fill")
+			}
+			.tint(item.isDone ? theme.textSecondary : theme.accent)
+		}
+		.swipeActions(edge: .trailing, allowsFullSwipe: true) {
+			Button(role: .destructive) {
+				onDelete()
+				Haptics.warning()
+			} label: {
+				Label("Delete", systemImage: "trash")
+			}
+		}
 		.confirmationDialog("Task Actions", isPresented: $showingMoveOptions, titleVisibility: .visible) {
 			Button("Edit Task") {
 				onEdit()
@@ -432,6 +456,7 @@ private struct NewTaskSheet: View {
 
 			PrimaryButton(title: "Add Task", iconSystemName: "plus", isEnabled: viewModel.isSubmissionEnabled) {
 				guard viewModel.addTask() else { return }
+				Haptics.success()
 				dismiss()
 			}
 			.padding(.horizontal, 24)
@@ -540,6 +565,7 @@ private struct EditTaskSheet: View {
 
 			PrimaryButton(title: "Save Changes", iconSystemName: "checkmark", isEnabled: viewModel.isSubmissionEnabled) {
 				guard viewModel.saveTask() else { return }
+				Haptics.success()
 				dismiss()
 			}
 			.padding(.horizontal, 24)
@@ -686,6 +712,20 @@ private struct PrimaryButton: View {
 		.buttonStyle(.plain)
 		.disabled(!isEnabled)
 		.opacity(isEnabled ? 1 : 0.6)
+	}
+}
+
+private enum Haptics {
+	static func success() {
+		let generator = UINotificationFeedbackGenerator()
+		generator.prepare()
+		generator.notificationOccurred(.success)
+	}
+
+	static func warning() {
+		let generator = UINotificationFeedbackGenerator()
+		generator.prepare()
+		generator.notificationOccurred(.warning)
 	}
 }
 

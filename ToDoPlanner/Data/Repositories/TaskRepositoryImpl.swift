@@ -31,6 +31,10 @@ final class TaskRepositoryImpl: TaskRepository {
 		store.updateTask(id, with: draft, for: date)
 	}
 
+	func deleteTask(_ id: UUID) {
+		store.deleteTask(id)
+	}
+
 	func toggleDone(_ id: UUID) {
 		store.toggleDone(id)
 	}
