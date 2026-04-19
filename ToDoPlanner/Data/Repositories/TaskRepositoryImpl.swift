@@ -12,6 +12,10 @@ final class TaskRepositoryImpl: TaskRepository {
 		store.lastPersistenceErrorMessage
 	}
 
+	func allTasks() -> [TodoItem] {
+		store.allTasks()
+	}
+
 	func tasks(for date: Date, dayPart: DayPart) -> [TodoItem] {
 		store.tasks(for: date, dayPart: dayPart)
 	}

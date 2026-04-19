@@ -40,6 +40,10 @@ final class TaskStore: ObservableObject {
 			.sorted(by: taskSortComparator)
 	}
 
+	func allTasks() -> [TodoItem] {
+		tasks
+	}
+
 	func addTask(
 		title: String,
 		details: String?,
@@ -71,6 +75,7 @@ final class TaskStore: ObservableObject {
 		guard let idx = tasks.firstIndex(where: { $0.id == id }) else { return }
 		let wasDone = tasks[idx].isDone
 		tasks[idx].isDone.toggle()
+		tasks[idx].completedAt = tasks[idx].isDone ? Date() : nil
 		let updatedTask = tasks[idx]
 		if !wasDone, updatedTask.isDone {
 			_ = generateNextOccurrenceIfNeeded(from: updatedTask)

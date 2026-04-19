@@ -61,6 +61,7 @@ final class UseCaseTests: XCTestCase {
 
 private final class MockTaskRepository: TaskRepository {
 	var lastPersistenceErrorMessage: String? { nil }
+	func allTasks() -> [TodoItem] { [] }
 
 	func tasks(for date: Date, dayPart: DayPart) -> [TodoItem] {
 		[TodoItem(title: "A", details: nil, dueDate: date, dayPart: dayPart, priority: .medium, rewardPoints: .p25)]

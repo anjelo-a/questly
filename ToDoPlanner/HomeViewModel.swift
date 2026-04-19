@@ -72,6 +72,22 @@ struct HomeSectionModel: Identifiable, Hashable {
     var id: DayPart { part }
 }
 
+struct HomeInsightsModel: Hashable {
+    let completedToday: Int
+    let completedThisWeek: Int
+    let activeCount: Int
+    let overdueCount: Int
+    let dailyStreak: Int
+
+    static let empty = HomeInsightsModel(
+        completedToday: 0,
+        completedThisWeek: 0,
+        activeCount: 0,
+        overdueCount: 0,
+        dailyStreak: 0
+    )
+}
+
 @MainActor
 final class NewTaskViewModel: ObservableObject, Identifiable {
     let id = UUID()
@@ -306,6 +322,7 @@ final class HomeViewModel: ObservableObject {
     }
     @Published private(set) var sections: [HomeSectionModel] = []
     @Published private(set) var persistenceMessage: String?
+    @Published private(set) var insights: HomeInsightsModel = .empty
 
     private let taskRepository: TaskRepository
     private let calendarRepository: CalendarRepository
@@ -510,6 +527,7 @@ final class HomeViewModel: ObservableObject {
         } else {
             sections = newSections
         }
+        refreshInsights()
     }
 
     private func refreshSectionsForDiscoveryState() {
@@ -543,6 +561,49 @@ final class HomeViewModel: ObservableObject {
         }
 
         return false
+    }
+
+    private func refreshInsights() {
+        let tasks = taskRepository.allTasks()
+        let calendar = Calendar.current
+        let now = Date()
+
+        let completedTimestamps = tasks.compactMap(\.completedAt)
+        let completedToday = completedTimestamps.filter { calendar.isDateInToday($0) }.count
+
+        let completedThisWeek: Int = {
+            guard let interval = calendar.dateInterval(of: .weekOfYear, for: now) else { return 0 }
+            return completedTimestamps.filter { interval.contains($0) }.count
+        }()
+
+        let activeCount = tasks.filter { !$0.isDone }.count
+        let overdueCount = tasks.filter {
+            guard !$0.isDone else { return false }
+            guard let dueDate = $0.dueDate else { return false }
+            return dueDate < now
+        }.count
+
+        insights = HomeInsightsModel(
+            completedToday: completedToday,
+            completedThisWeek: completedThisWeek,
+            activeCount: activeCount,
+            overdueCount: overdueCount,
+            dailyStreak: calculateDailyStreak(completionDates: completedTimestamps, now: now, calendar: calendar)
+        )
+    }
+
+    private func calculateDailyStreak(completionDates: [Date], now: Date, calendar: Calendar) -> Int {
+        let completionDays = Set(completionDates.map { calendar.startOfDay(for: $0) })
+        var streak = 0
+        var currentDay = calendar.startOfDay(for: now)
+
+        while completionDays.contains(currentDay) {
+            streak += 1
+            guard let previousDay = calendar.date(byAdding: .day, value: -1, to: currentDay) else { break }
+            currentDay = previousDay
+        }
+
+        return streak
     }
 
     private func syncPersistenceState() {

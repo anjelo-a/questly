@@ -115,6 +115,7 @@ struct TodoItem: Identifiable, Hashable, Codable {
 	var title: String
 	var details: String?
 	var isDone: Bool
+	var completedAt: Date?
 	var dueDate: Date?
 	var dayPart: DayPart
 	var priority: TaskPriority
@@ -127,6 +128,7 @@ struct TodoItem: Identifiable, Hashable, Codable {
 		title: String,
 		details: String? = nil,
 		isDone: Bool = false,
+		completedAt: Date? = nil,
 		dueDate: Date? = nil,
 		dayPart: DayPart = .morning,
 		priority: TaskPriority = .medium,
@@ -138,6 +140,7 @@ struct TodoItem: Identifiable, Hashable, Codable {
 		self.title = title
 		self.details = details
 		self.isDone = isDone
+		self.completedAt = completedAt
 		self.dueDate = dueDate
 		self.dayPart = dayPart
 		self.priority = priority

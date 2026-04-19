@@ -28,6 +28,10 @@ struct HomeView: View {
 					.padding(.horizontal, 16)
 					.padding(.top, 16)
 
+				insightsCard
+					.padding(.horizontal, 16)
+					.padding(.top, 14)
+
 					ScrollView(.vertical, showsIndicators: false) {
 						VStack(spacing: 24) {
 							ForEach(viewModel.sections) { section in
@@ -155,6 +159,33 @@ struct HomeView: View {
 				}
 			}
 		}
+	}
+
+	private var insightsCard: some View {
+		let insights = viewModel.insights
+		return VStack(alignment: .leading, spacing: 10) {
+			Text("Insights")
+				.font(.system(size: 15, weight: .semibold))
+				.foregroundStyle(theme.textPrimary)
+
+			LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
+				InsightMetric(title: "Done Today", value: "\(insights.completedToday)")
+				InsightMetric(title: "Done This Week", value: "\(insights.completedThisWeek)")
+				InsightMetric(title: "Active", value: "\(insights.activeCount)")
+				InsightMetric(title: "Overdue", value: "\(insights.overdueCount)")
+			}
+
+			HStack(spacing: 6) {
+				Image(systemName: "flame.fill")
+					.foregroundStyle(theme.warning)
+				Text("Streak: \(insights.dailyStreak) day\(insights.dailyStreak == 1 ? "" : "s")")
+					.font(.system(size: 13, weight: .semibold))
+					.foregroundStyle(theme.textPrimary)
+			}
+		}
+		.padding(12)
+		.background(theme.surface)
+		.clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
 	}
 
 	private var dateStrip: some View {
@@ -447,6 +478,28 @@ private struct EventRow: View {
 		.clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
 	}
 
+}
+
+private struct InsightMetric: View {
+	@Environment(\.appTheme) private var theme
+	let title: String
+	let value: String
+
+	var body: some View {
+		VStack(alignment: .leading, spacing: 3) {
+			Text(value)
+				.font(.system(size: 18, weight: .bold))
+				.foregroundStyle(theme.textPrimary)
+			Text(title)
+				.font(.system(size: 11, weight: .medium))
+				.foregroundStyle(theme.textSecondary)
+		}
+		.frame(maxWidth: .infinity, alignment: .leading)
+		.padding(.horizontal, 10)
+		.padding(.vertical, 8)
+		.background(theme.surfaceAlt)
+		.clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+	}
 }
 
 private struct NewTaskSheet: View {
