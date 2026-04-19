@@ -69,7 +69,7 @@ final class NewTaskViewModel: ObservableObject, Identifiable {
     }
 
     var whenOptions: [DayPart] {
-        DayPart.sheetParts
+        DayPart.allCases
     }
 
     var priorityOptions: [TaskPriority] {
@@ -221,6 +221,11 @@ final class HomeViewModel: ObservableObject {
 
     func addTask(_ draft: NewTaskDraft) {
         taskRepository.addTask(draft, for: selectedDate)
+        objectWillChange.send()
+    }
+    
+    func setDayPart(_ part: DayPart, for id: UUID) {
+        taskRepository.setDayPart(part, for: id)
         objectWillChange.send()
     }
 

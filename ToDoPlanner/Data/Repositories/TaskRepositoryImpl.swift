@@ -11,7 +11,11 @@ final class TaskRepositoryImpl: TaskRepository {
 	func tasks(for date: Date, dayPart: DayPart) -> [TodoItem] {
 		store.tasks(for: date, dayPart: dayPart)
 	}
-
+    
+    func setDayPart(_ part: DayPart, for id: UUID) {
+        store.setDayPart(part, for: id)
+    }
+    
 	func addTask(_ draft: NewTaskDraft, for date: Date) {
 		store.addTask(
 			title: draft.title,
