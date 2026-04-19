@@ -88,6 +88,28 @@ enum TaskRewardPoints: Int, CaseIterable, Identifiable, Hashable, Codable {
 	var title: String { "⚡ \(rawValue)" }
 }
 
+enum TaskRecurrence: String, CaseIterable, Identifiable, Hashable, Codable {
+	case none
+	case daily
+	case weekdays
+	case weekly
+
+	var id: String { rawValue }
+
+	var title: String {
+		switch self {
+		case .none:
+			"None"
+		case .daily:
+			"Daily"
+		case .weekdays:
+			"Weekdays"
+		case .weekly:
+			"Weekly"
+		}
+	}
+}
+
 struct TodoItem: Identifiable, Hashable, Codable {
 	let id: UUID
 	var title: String
@@ -98,6 +120,7 @@ struct TodoItem: Identifiable, Hashable, Codable {
 	var priority: TaskPriority
 	var rewardPoints: TaskRewardPoints
 	var reminderDate: Date?
+	var recurrence: TaskRecurrence
 
 	init(
 		id: UUID = UUID(),
@@ -108,7 +131,8 @@ struct TodoItem: Identifiable, Hashable, Codable {
 		dayPart: DayPart = .morning,
 		priority: TaskPriority = .medium,
 		rewardPoints: TaskRewardPoints = .p25,
-		reminderDate: Date? = nil
+		reminderDate: Date? = nil,
+		recurrence: TaskRecurrence = .none
 	) {
 		self.id = id
 		self.title = title
@@ -119,6 +143,7 @@ struct TodoItem: Identifiable, Hashable, Codable {
 		self.priority = priority
 		self.rewardPoints = rewardPoints
 		self.reminderDate = reminderDate
+		self.recurrence = recurrence
 	}
 }
 
@@ -137,6 +162,7 @@ struct NewTaskDraft: Hashable {
 	let priority: TaskPriority
 	let rewardPoints: TaskRewardPoints
 	let reminderDate: Date?
+	let recurrence: TaskRecurrence
 }
 
 struct EditTaskDraft: Hashable {
@@ -146,4 +172,5 @@ struct EditTaskDraft: Hashable {
 	let priority: TaskPriority
 	let rewardPoints: TaskRewardPoints
 	let reminderDate: Date?
+	let recurrence: TaskRecurrence
 }

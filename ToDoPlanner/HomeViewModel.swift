@@ -20,6 +20,7 @@ struct HomeTaskRowModel: Identifiable, Hashable {
     let priority: TaskPriority
     let rewardPoints: TaskRewardPoints
     let reminderDate: Date?
+    let recurrence: TaskRecurrence
 }
 
 struct HomeEventRowModel: Identifiable, Hashable {
@@ -65,6 +66,7 @@ final class NewTaskViewModel: ObservableObject, Identifiable {
     @Published var selectedPoints: TaskRewardPoints = .p25
     @Published var isReminderEnabled: Bool
     @Published var reminderDate: Date
+    @Published var selectedRecurrence: TaskRecurrence = .none
 
     init(defaultDayPart: DayPart, date: Date, onAdd: @escaping (NewTaskDraft) -> Void) {
         self.selectedWhen = defaultDayPart
@@ -95,6 +97,10 @@ final class NewTaskViewModel: ObservableObject, Identifiable {
         TaskRewardPoints.allCases
     }
 
+    var recurrenceOptions: [TaskRecurrence] {
+        TaskRecurrence.allCases
+    }
+
     func makeDraft() -> NewTaskDraft? {
         let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedTitle.isEmpty else { return nil }
@@ -105,7 +111,8 @@ final class NewTaskViewModel: ObservableObject, Identifiable {
             dayPart: selectedWhen,
             priority: selectedPriority,
             rewardPoints: selectedPoints,
-            reminderDate: isReminderEnabled ? reminderDate : nil
+            reminderDate: isReminderEnabled ? reminderDate : nil,
+            recurrence: selectedRecurrence
         )
     }
 
@@ -166,6 +173,7 @@ final class EditTaskViewModel: ObservableObject, Identifiable {
     @Published var selectedPoints: TaskRewardPoints
     @Published var isReminderEnabled: Bool
     @Published var reminderDate: Date
+    @Published var selectedRecurrence: TaskRecurrence
 
     init(task: HomeTaskRowModel, onSave: @escaping (UUID, EditTaskDraft) -> Void) {
         self.taskID = task.id
@@ -179,6 +187,7 @@ final class EditTaskViewModel: ObservableObject, Identifiable {
         self.reminderDate = task.reminderDate ?? task.dayPart.defaultReminderHour.flatMap {
             Calendar.current.date(bySettingHour: $0, minute: 0, second: 0, of: anchorDate)
         } ?? Date()
+        self.selectedRecurrence = task.recurrence
         self.onSave = onSave
     }
 
@@ -198,6 +207,10 @@ final class EditTaskViewModel: ObservableObject, Identifiable {
         TaskRewardPoints.allCases
     }
 
+    var recurrenceOptions: [TaskRecurrence] {
+        TaskRecurrence.allCases
+    }
+
     func makeDraft() -> EditTaskDraft? {
         let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedTitle.isEmpty else { return nil }
@@ -208,7 +221,8 @@ final class EditTaskViewModel: ObservableObject, Identifiable {
             dayPart: selectedWhen,
             priority: selectedPriority,
             rewardPoints: selectedPoints,
-            reminderDate: isReminderEnabled ? reminderDate : nil
+            reminderDate: isReminderEnabled ? reminderDate : nil,
+            recurrence: selectedRecurrence
         )
     }
 
@@ -428,7 +442,8 @@ final class HomeViewModel: ObservableObject {
                         dayPart: $0.dayPart,
                         priority: $0.priority,
                         rewardPoints: $0.rewardPoints,
-                        reminderDate: $0.reminderDate
+                        reminderDate: $0.reminderDate,
+                        recurrence: $0.recurrence
                     )
                 )
             }

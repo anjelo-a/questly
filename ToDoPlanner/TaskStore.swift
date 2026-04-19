@@ -47,7 +47,8 @@ final class TaskStore: ObservableObject {
 		dayPart: DayPart,
 		priority: TaskPriority,
 		rewardPoints: TaskRewardPoints,
-		reminderDate: Date? = nil
+		reminderDate: Date? = nil,
+		recurrence: TaskRecurrence = .none
 	) {
 		let due = dueDate(for: dayPart, on: date)
 		let task = TodoItem(
@@ -58,7 +59,8 @@ final class TaskStore: ObservableObject {
 			dayPart: dayPart,
 			priority: priority,
 			rewardPoints: rewardPoints,
-			reminderDate: rebasedReminderDate(from: reminderDate, on: date)
+			reminderDate: rebasedReminderDate(from: reminderDate, on: date),
+			recurrence: recurrence
 		)
 		tasks.append(task)
 		persistTasks()
@@ -67,7 +69,12 @@ final class TaskStore: ObservableObject {
 
 	func toggleDone(_ id: UUID) {
 		guard let idx = tasks.firstIndex(where: { $0.id == id }) else { return }
+		let wasDone = tasks[idx].isDone
 		tasks[idx].isDone.toggle()
+		let updatedTask = tasks[idx]
+		if !wasDone, updatedTask.isDone {
+			_ = generateNextOccurrenceIfNeeded(from: updatedTask)
+		}
 		persistTasks()
 		synchronizeReminder(for: tasks[idx])
 	}
@@ -83,6 +90,7 @@ final class TaskStore: ObservableObject {
 		tasks[idx].priority = draft.priority
 		tasks[idx].rewardPoints = draft.rewardPoints
 		tasks[idx].reminderDate = rebasedReminderDate(from: draft.reminderDate, on: date)
+		tasks[idx].recurrence = draft.recurrence
 
 		if tasks[idx].dayPart != draft.dayPart {
 			tasks[idx].dayPart = draft.dayPart
@@ -142,6 +150,64 @@ final class TaskStore: ObservableObject {
 		let hour = timeComponents.hour ?? 9
 		let minute = timeComponents.minute ?? 0
 		return calendar.date(bySettingHour: hour, minute: minute, second: 0, of: date)
+	}
+
+	private func generateNextOccurrenceIfNeeded(from task: TodoItem) -> TodoItem? {
+		guard task.recurrence != .none, let currentDueDate = task.dueDate else { return nil }
+		guard let nextDate = nextOccurrenceDate(after: currentDueDate, recurrence: task.recurrence) else { return nil }
+
+		let nextDueDate = dueDate(for: task.dayPart, on: nextDate)
+		guard !hasPendingRecurringOccurrence(matching: task, dueDate: nextDueDate) else { return nil }
+
+		let nextTask = TodoItem(
+			title: task.title,
+			details: task.details,
+			isDone: false,
+			dueDate: nextDueDate,
+			dayPart: task.dayPart,
+			priority: task.priority,
+			rewardPoints: task.rewardPoints,
+			reminderDate: rebasedReminderDate(from: task.reminderDate, on: nextDate),
+			recurrence: task.recurrence
+		)
+		tasks.append(nextTask)
+		synchronizeReminder(for: nextTask)
+		return nextTask
+	}
+
+	private func nextOccurrenceDate(after date: Date, recurrence: TaskRecurrence) -> Date? {
+		let calendar = Calendar.current
+		switch recurrence {
+		case .none:
+			return nil
+		case .daily:
+			return calendar.date(byAdding: .day, value: 1, to: date)
+		case .weekdays:
+			var candidate = date
+			repeat {
+				guard let next = calendar.date(byAdding: .day, value: 1, to: candidate) else { return nil }
+				candidate = next
+			} while calendar.isDateInWeekend(candidate)
+			return candidate
+		case .weekly:
+			return calendar.date(byAdding: .day, value: 7, to: date)
+		}
+	}
+
+	private func hasPendingRecurringOccurrence(matching source: TodoItem, dueDate: Date) -> Bool {
+		let calendar = Calendar.current
+		return tasks.contains { item in
+			guard item.id != source.id else { return false }
+			guard !item.isDone else { return false }
+			guard item.recurrence == source.recurrence else { return false }
+			guard item.dayPart == source.dayPart else { return false }
+			guard item.priority == source.priority else { return false }
+			guard item.rewardPoints == source.rewardPoints else { return false }
+			guard item.title == source.title else { return false }
+			guard item.details == source.details else { return false }
+			guard let itemDueDate = item.dueDate else { return false }
+			return calendar.isDate(itemDueDate, inSameDayAs: dueDate)
+		}
 	}
 
 	private func synchronizeReminder(for task: TodoItem) {

@@ -446,6 +446,21 @@ private struct NewTaskSheet: View {
 							}
 						}
 
+						SheetSection(label: "REPEAT") {
+							LazyVGrid(columns: pillColumns, alignment: .leading, spacing: 12) {
+								ForEach(viewModel.recurrenceOptions) { option in
+									PillButton(
+										title: option.title,
+										isSelected: viewModel.selectedRecurrence == option,
+										selectedBackground: theme.accent,
+										unselectedBackground: pillBackgroundColor
+									) {
+										viewModel.selectedRecurrence = option
+									}
+								}
+							}
+						}
+
 						SheetSection(label: "PRIORITY") {
 							HStack(spacing: 12) {
 								ForEach(viewModel.priorityOptions) { option in
@@ -581,6 +596,21 @@ private struct EditTaskSheet: View {
 								Text("Inbox reminders are optional and set manually.")
 									.font(.system(size: 13, weight: .regular))
 									.foregroundStyle(theme.textSecondary)
+							}
+						}
+
+						SheetSection(label: "REPEAT") {
+							LazyVGrid(columns: pillColumns, alignment: .leading, spacing: 12) {
+								ForEach(viewModel.recurrenceOptions) { option in
+									PillButton(
+										title: option.title,
+										isSelected: viewModel.selectedRecurrence == option,
+										selectedBackground: theme.accent,
+										unselectedBackground: pillBackgroundColor
+									) {
+										viewModel.selectedRecurrence = option
+									}
+								}
 							}
 						}
 

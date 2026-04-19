@@ -24,7 +24,8 @@ final class TaskRepositoryImpl: TaskRepository {
 			dayPart: draft.dayPart,
 			priority: draft.priority,
 			rewardPoints: draft.rewardPoints,
-			reminderDate: draft.reminderDate
+			reminderDate: draft.reminderDate,
+			recurrence: draft.recurrence
 		)
 	}
 
