@@ -1,4 +1,4 @@
-## ToDoPlanner (iOS)
+## Questly (iOS)
 
 SwiftUI to-do + planner home screen with calendar integration (EventKit).
 
@@ -13,5 +13,4 @@ SwiftUI to-do + planner home screen with calendar integration (EventKit).
 
 ### Notes
 - The app requests Calendar access to display upcoming events.
-- Share your Figma file URL + Home frame node id to align UI with your design.
-
+- Task reminders use local notifications (`UNUserNotificationCenter`).

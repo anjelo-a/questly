@@ -61,7 +61,10 @@ struct FocusView: View {
 						.clipShape(Capsule())
 					}
 					.buttonStyle(.plain)
-					.accessibilityHint(Text("Starts a focus timer"))
+					.disabled(true)
+					.opacity(0.7)
+					.accessibilityLabel(Text("Start Focus unavailable"))
+					.accessibilityHint(Text("Focus timer is not available in this version"))
 
 					VStack(alignment: .leading, spacing: 16) {
 						Text("FOCUS TIPS")
@@ -113,4 +116,3 @@ private struct FocusPresetPill: View {
 		.accessibilityAddTraits(isSelected ? .isSelected : [])
 	}
 }
-

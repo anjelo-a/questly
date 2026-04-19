@@ -195,6 +195,10 @@ private struct WishRow: View {
 					.clipShape(Capsule())
 			}
 			.buttonStyle(.plain)
+			.disabled(true)
+			.opacity(0.6)
+			.accessibilityLabel(Text("Redeem unavailable"))
+			.accessibilityHint(Text("Rewards redemption is not available in this version"))
 		}
 		.padding(.leading, 16)
 		.padding(.trailing, 12)
@@ -209,4 +213,3 @@ private struct WishRow: View {
 		.shadow(color: Color.black.opacity(0.06), radius: 3, x: 0, y: 1)
 	}
 }
-

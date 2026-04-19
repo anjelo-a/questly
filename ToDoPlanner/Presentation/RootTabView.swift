@@ -46,7 +46,17 @@ struct RootTabView: View {
 		case .portfolio:
 			NavigationStack { PortfolioView() }
 		case .more:
-			NavigationStack { MoreView(homeViewModel: homeViewModel) }
+			NavigationStack {
+				MoreView(
+					homeViewModel: homeViewModel,
+					onOpenInboxComposer: {
+						withAnimation(.easeOut(duration: 0.18)) {
+							selection = .planner
+						}
+						homeViewModel.presentNewTask(for: .inbox)
+					}
+				)
+			}
 		}
 	}
 

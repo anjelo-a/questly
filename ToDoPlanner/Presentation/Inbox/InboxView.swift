@@ -2,6 +2,7 @@ import SwiftUI
 
 struct InboxView: View {
 	@Environment(\.appTheme) private var theme
+	let onOpenInboxComposer: () -> Void
 
 	var body: some View {
 		ZStack {
@@ -40,7 +41,9 @@ struct InboxView: View {
 						.multilineTextAlignment(.center)
 						.padding(.horizontal, 28)
 
-					Button {} label: {
+					Button {
+						onOpenInboxComposer()
+					} label: {
 						HStack(spacing: 10) {
 							RemoteIcon(url: URL(string: "https://www.figma.com/api/mcp/asset/b6b2d89d-96a3-4f13-8327-ac0c6de3baf8")!)
 								.frame(width: 20, height: 20)
@@ -56,6 +59,8 @@ struct InboxView: View {
 						.clipShape(Capsule())
 					}
 					.buttonStyle(.plain)
+					.accessibilityLabel(Text("Add task to Inbox"))
+					.accessibilityHint(Text("Switches to planner and opens the Inbox task composer"))
 				}
 
 				Spacer()
@@ -66,4 +71,3 @@ struct InboxView: View {
 		.navigationBarTitleDisplayMode(.inline)
 	}
 }
-

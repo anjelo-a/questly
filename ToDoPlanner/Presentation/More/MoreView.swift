@@ -4,6 +4,7 @@ import UIKit
 struct MoreView: View {
 	@Environment(\.appTheme) private var theme
 	@ObservedObject var homeViewModel: HomeViewModel
+	let onOpenInboxComposer: () -> Void
 
 	var body: some View {
 		ZStack {
@@ -36,7 +37,7 @@ struct MoreView: View {
 						.buttonStyle(.plain)
 
 						NavigationLink {
-							InboxView()
+							InboxView(onOpenInboxComposer: onOpenInboxComposer)
 						} label: {
 							MoreRow(
 								iconBackground: Color(red: 0xEE / 255, green: 0xF2 / 255, blue: 0xFF / 255),
