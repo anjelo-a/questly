@@ -280,6 +280,12 @@ final class HomeViewModel: ObservableObject {
         syncPersistenceState()
     }
 
+    func resetLocalData() {
+        taskRepository.resetLocalData()
+        reloadSections()
+        syncPersistenceState()
+    }
+
     func moveTask(_ id: UUID, to dayPart: DayPart) {
         taskRepository.moveTask(id, to: dayPart, for: selectedDate)
         reloadSections()

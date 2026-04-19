@@ -60,11 +60,16 @@ final class UseCaseTests: XCTestCase {
 }
 
 private final class MockTaskRepository: TaskRepository {
+	var lastPersistenceErrorMessage: String? { nil }
+
 	func tasks(for date: Date, dayPart: DayPart) -> [TodoItem] {
 		[TodoItem(title: "A", details: nil, dueDate: date, dayPart: dayPart, priority: .medium, rewardPoints: .p25)]
 	}
 
 	func addTask(_ draft: NewTaskDraft, for date: Date) {}
+	func updateTask(_ id: UUID, with draft: EditTaskDraft, for date: Date) {}
+	func resetLocalData() {}
+	func deleteTask(_ id: UUID) {}
 	func toggleDone(_ id: UUID) {}
 	func moveTask(_ id: UUID, to dayPart: DayPart, for date: Date) {}
 	func seedIfNeeded(for date: Date) {}

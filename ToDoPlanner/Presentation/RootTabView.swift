@@ -46,7 +46,7 @@ struct RootTabView: View {
 		case .portfolio:
 			NavigationStack { PortfolioView() }
 		case .more:
-			NavigationStack { MoreView() }
+			NavigationStack { MoreView(homeViewModel: homeViewModel) }
 		}
 	}
 
@@ -128,4 +128,3 @@ private extension AppTab {
 		}
 	}
 }
-

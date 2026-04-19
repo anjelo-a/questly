@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct ToDoPlannerApp: App {
+struct QuestlyApp: App {
 	@StateObject private var homeViewModel = HomeViewModel()
 
 	var body: some Scene {

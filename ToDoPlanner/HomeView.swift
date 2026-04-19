@@ -90,22 +90,27 @@ struct HomeView: View {
 		ScrollView(.horizontal, showsIndicators: false) {
 			HStack(spacing: 8) {
 				ForEach(viewModel.dayItems) { day in
-					VStack(spacing: 4) {
-						Text(day.weekdayText)
-							.font(.system(size: 12, weight: .regular))
-							.foregroundStyle(day.isSelected ? .white : theme.textSecondary)
-
-						Text(day.dayText)
-							.font(.system(size: 18, weight: .semibold))
-							.foregroundStyle(day.isSelected ? .white : theme.textPrimary)
-					}
-					.frame(width: 50, height: 64)
-					.background(day.isSelected ? theme.accent : Color.clear)
-					.clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-					.contentShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-					.onTapGesture {
+					Button {
 						viewModel.selectDate(day.date)
+					} label: {
+						VStack(spacing: 4) {
+							Text(day.weekdayText)
+								.font(.system(size: 12, weight: .regular))
+								.foregroundStyle(day.isSelected ? .white : theme.textSecondary)
+
+							Text(day.dayText)
+								.font(.system(size: 18, weight: .semibold))
+								.foregroundStyle(day.isSelected ? .white : theme.textPrimary)
+						}
+						.frame(width: 50, height: 64)
+						.background(day.isSelected ? theme.accent : Color.clear)
+						.clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+						.contentShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
 					}
+					.buttonStyle(.plain)
+					.accessibilityLabel(Text(day.date.formatted(.dateTime.weekday(.wide).month(.wide).day())))
+					.accessibilityHint(Text("Shows planner sections for this date"))
+					.accessibilityAddTraits(day.isSelected ? .isSelected : [])
 				}
 			}
 			.padding(.vertical, 4)
@@ -173,6 +178,8 @@ struct HomeView: View {
 					.clipShape(RoundedRectangle(cornerRadius: theme.cornerRadiusMedium, style: .continuous))
 				}
 				.buttonStyle(.plain)
+				.accessibilityLabel(Text("Add task in \(section.title)"))
+				.accessibilityHint(Text("Opens the New Task sheet for \(section.title)"))
 			}
 		}
 	}
@@ -240,6 +247,8 @@ private struct TaskRow: View {
 				}
 			}
 			.buttonStyle(.plain)
+			.accessibilityLabel(Text(item.isDone ? "Mark \(item.title) not done" : "Mark \(item.title) done"))
+			.accessibilityHint(Text("Toggles completion status"))
 
 			Menu {
 				Button("Edit Task") {
@@ -258,6 +267,8 @@ private struct TaskRow: View {
 					.frame(width: 28, height: 28)
 			}
 			.buttonStyle(.plain)
+			.accessibilityLabel(Text("Task actions for \(item.title)"))
+			.accessibilityHint(Text("Opens edit, move, and delete actions"))
 		}
 		.padding(.horizontal, 12)
 		.padding(.vertical, 10)
@@ -725,19 +736,6 @@ private enum Haptics {
 	}
 }
 
-private func partIconName(_ part: DayPart) -> String {
-	switch part {
-	case .morning:
-		"planner_morning"
-	case .midday:
-		"planner_midday"
-	case .evening:
-		"planner_evening"
-	case .inbox:
-		"inbox_empty"
-	}
-}
-
 private func partSymbolName(_ part: DayPart) -> String {
 	switch part {
 	case .morning:
@@ -763,9 +761,6 @@ private func whenIconURL(for part: DayPart) -> URL {
 		whenIconInboxURL
 	}
 }
-
-private let plusIconURL = URL(string: "https://www.figma.com/api/mcp/asset/989cbe21-9303-4195-8d60-245831ac6b20")!
-private let fabIconURL = URL(string: "https://www.figma.com/api/mcp/asset/14333ba5-662d-4194-9a97-d376a1640048")!
 
 private let whenIconMorningURL = URL(string: "https://www.figma.com/api/mcp/asset/e5544835-578d-43cb-a150-c9664727a984")!
 private let whenIconMiddayURL = URL(string: "https://www.figma.com/api/mcp/asset/bdd8c1df-09c7-4c74-981a-0a3d6e2cb4de")!

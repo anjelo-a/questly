@@ -31,6 +31,10 @@ final class TaskRepositoryImpl: TaskRepository {
 		store.updateTask(id, with: draft, for: date)
 	}
 
+	func resetLocalData() {
+		store.resetLocalData()
+	}
+
 	func deleteTask(_ id: UUID) {
 		store.deleteTask(id)
 	}

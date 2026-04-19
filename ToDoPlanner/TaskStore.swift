@@ -6,10 +6,13 @@ final class TaskStore: ObservableObject {
 	@Published private(set) var tasks: [TodoItem] = []
 	@Published private(set) var lastPersistenceErrorMessage: String?
 	private let persistence: TaskPersistence
+	private let userDefaults: UserDefaults
+	private let hasSeededDefaultsKey = "questly.hasSeededDefaultTasks"
 
-	init(persistence: TaskPersistence? = nil) {
+	init(persistence: TaskPersistence? = nil, userDefaults: UserDefaults = .standard) {
 		let resolvedPersistence = persistence ?? TaskPersistence()
 		self.persistence = resolvedPersistence
+		self.userDefaults = userDefaults
 		do {
 			self.tasks = try resolvedPersistence.loadTasks()
 		} catch {
@@ -84,6 +87,12 @@ final class TaskStore: ObservableObject {
 		persistTasks()
 	}
 
+	func resetLocalData() {
+		tasks = []
+		userDefaults.set(true, forKey: hasSeededDefaultsKey)
+		persistTasks()
+	}
+
 	func moveTask(_ id: UUID, to dayPart: DayPart, for date: Date) {
 		guard let idx = tasks.firstIndex(where: { $0.id == id }) else { return }
 		tasks[idx].dayPart = dayPart
@@ -92,10 +101,11 @@ final class TaskStore: ObservableObject {
 	}
 
 	func seedIfNeeded(for date: Date) {
-		guard tasks.isEmpty else { return }
+		guard tasks.isEmpty, !userDefaults.bool(forKey: hasSeededDefaultsKey) else { return }
 		addTask(title: "Review schedule", details: nil, date: date, dayPart: .morning, priority: .medium, rewardPoints: .p25)
 		addTask(title: "Gym session", details: nil, date: date, dayPart: .midday, priority: .low, rewardPoints: .p15)
 		addTask(title: "Plan tomorrow", details: nil, date: date, dayPart: .evening, priority: .high, rewardPoints: .p50)
+		userDefaults.set(true, forKey: hasSeededDefaultsKey)
 	}
 
 	private func dueDate(for dayPart: DayPart, on date: Date) -> Date {

@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MoreView: View {
 	@Environment(\.appTheme) private var theme
+	@ObservedObject var homeViewModel: HomeViewModel
 
 	var body: some View {
 		ZStack {
@@ -41,6 +42,18 @@ struct MoreView: View {
 								iconURL: URL(string: "https://www.figma.com/api/mcp/asset/b84d4bef-5a44-4557-875a-40b73b156c24")!,
 								title: "Inbox",
 								subtitle: "Capture & organize later"
+							)
+						}
+						.buttonStyle(.plain)
+
+						NavigationLink {
+							SettingsAboutView(homeViewModel: homeViewModel)
+						} label: {
+							MoreRow(
+								iconBackground: Color(red: 0xE9 / 255, green: 0xF5 / 255, blue: 0xEF / 255),
+								iconURL: URL(string: "https://www.figma.com/api/mcp/asset/ae4520a7-8ab6-4df9-8559-9e3d5c2fed5a")!,
+								title: "Settings & About",
+								subtitle: "Version info and local data controls"
 							)
 						}
 						.buttonStyle(.plain)
@@ -96,6 +109,80 @@ private struct MoreRow: View {
 		.clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
 		.shadow(color: Color.black.opacity(0.06), radius: 3, x: 0, y: 1)
 		.accessibilityElement(children: .combine)
+		.accessibilityLabel(Text("\(title). \(subtitle)"))
+	}
+}
+
+private struct SettingsAboutView: View {
+	@Environment(\.appTheme) private var theme
+	@ObservedObject var homeViewModel: HomeViewModel
+	@State private var showsResetConfirmation = false
+	@State private var resetStatusMessage: String?
+
+	var body: some View {
+		Form {
+			Section("About") {
+				HStack {
+					Text("App")
+					Spacer()
+					Text("Questly")
+						.foregroundStyle(theme.textSecondary)
+				}
+
+				HStack {
+					Text("Version")
+					Spacer()
+					Text(versionBuildText)
+						.foregroundStyle(theme.textSecondary)
+				}
+			}
+
+			Section("Local Data") {
+				Button("Reset Local Data", role: .destructive) {
+					showsResetConfirmation = true
+				}
+				.accessibilityHint(Text("Clears all locally stored tasks on this device"))
+
+				Text("This keeps the app local-first. There is no cloud sync yet.")
+					.font(.footnote)
+					.foregroundStyle(theme.textSecondary)
+
+				if let message = resetStatusMessage {
+					Text(message)
+						.font(.footnote)
+						.foregroundStyle(theme.textSecondary)
+				}
+			}
+
+			Section("More Settings") {
+				Text("Notifications, theme controls, and export options are planned for a future update.")
+					.font(.footnote)
+					.foregroundStyle(theme.textSecondary)
+			}
+		}
+		.scrollContentBackground(.hidden)
+		.background(theme.background.ignoresSafeArea())
+		.navigationTitle("Settings")
+		.navigationBarTitleDisplayMode(.inline)
+		.confirmationDialog(
+			"Reset local data?",
+			isPresented: $showsResetConfirmation,
+			titleVisibility: .visible
+		) {
+			Button("Reset Data", role: .destructive) {
+				homeViewModel.resetLocalData()
+				resetStatusMessage = homeViewModel.persistenceMessage ?? "Local task data was reset."
+			}
+			Button("Cancel", role: .cancel) {}
+		} message: {
+			Text("This removes all saved tasks from this device.")
+		}
+	}
+
+	private var versionBuildText: String {
+		let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0"
+		let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "1"
+		return "\(version) (\(build))"
 	}
 }
 
@@ -150,4 +237,3 @@ private struct ProgressStat: View {
 		}
 	}
 }
-
