@@ -105,6 +105,7 @@ final class NewTaskViewModel: ObservableObject, Identifiable {
 final class HomeViewModel: ObservableObject {
     @Published var selectedDate: Date
     @Published var newTaskViewModel: NewTaskViewModel?
+    @Published private(set) var sections: [HomeSectionModel] = []
 
     private let taskRepository: TaskRepository
     private let calendarRepository: CalendarRepository
@@ -173,8 +174,57 @@ final class HomeViewModel: ObservableObject {
         }
     }
 
-    var sections: [HomeSectionModel] {
-        getPlannerSections.execute(date: selectedDate).map { section in
+    func loadIfNeeded() {
+        guard !hasLoaded else { return }
+        hasLoaded = true
+        taskRepository.seedIfNeeded(for: selectedDate)
+        reloadSections()
+        refreshCalendar(for: selectedDate)
+    }
+
+    func selectDate(_ date: Date) {
+        selectedDate = date
+        taskRepository.seedIfNeeded(for: date)
+        reloadSections()
+        refreshCalendar(for: date)
+    }
+
+    func toggleDone(_ id: UUID) {
+        taskRepository.toggleDone(id)
+        reloadSections()
+    }
+
+    func addTask(_ draft: NewTaskDraft) {
+        taskRepository.addTask(draft, for: selectedDate)
+        reloadSections()
+    }
+
+    func moveTask(_ id: UUID, to dayPart: DayPart) {
+        taskRepository.moveTask(id, to: dayPart, for: selectedDate)
+        reloadSections()
+    }
+
+    func presentNewTask(for part: DayPart) {
+        newTaskViewModel = NewTaskViewModel(defaultDayPart: part, date: selectedDate) { [weak self] draft in
+            self?.addTask(draft)
+            self?.dismissNewTask()
+        }
+    }
+
+    private func dismissNewTask() {
+        newTaskViewModel = nil
+    }
+
+    private func refreshCalendar(for date: Date) {
+        guard !isRunningInPreviews else { return }
+        Task {
+            await calendarRepository.refresh(for: date)
+            reloadSections()
+        }
+    }
+
+    private func reloadSections() {
+        sections = getPlannerSections.execute(date: selectedDate).map { section in
             let taskEntries = section.tasks.map {
                 HomeSectionEntry.task(
                     HomeTaskRowModel(id: $0.id, title: $0.title, isDone: $0.isDone)
@@ -197,54 +247,6 @@ final class HomeViewModel: ObservableObject {
                 iconURL: iconURL(for: section.part),
                 entries: taskEntries + eventEntries
             )
-        }
-    }
-
-    func loadIfNeeded() {
-        guard !hasLoaded else { return }
-        hasLoaded = true
-        taskRepository.seedIfNeeded(for: selectedDate)
-        refreshCalendar(for: selectedDate)
-        objectWillChange.send()
-    }
-
-    func selectDate(_ date: Date) {
-        selectedDate = date
-        taskRepository.seedIfNeeded(for: date)
-        refreshCalendar(for: date)
-    }
-
-    func toggleDone(_ id: UUID) {
-        taskRepository.toggleDone(id)
-        objectWillChange.send()
-    }
-
-    func addTask(_ draft: NewTaskDraft) {
-        taskRepository.addTask(draft, for: selectedDate)
-        objectWillChange.send()
-    }
-
-    func moveTask(_ id: UUID, to dayPart: DayPart) {
-        taskRepository.moveTask(id, to: dayPart, for: selectedDate)
-        objectWillChange.send()
-    }
-
-    func presentNewTask(for part: DayPart) {
-        newTaskViewModel = NewTaskViewModel(defaultDayPart: part, date: selectedDate) { [weak self] draft in
-            self?.addTask(draft)
-            self?.dismissNewTask()
-        }
-    }
-
-    private func dismissNewTask() {
-        newTaskViewModel = nil
-    }
-
-    private func refreshCalendar(for date: Date) {
-        guard !isRunningInPreviews else { return }
-        Task {
-            await calendarRepository.refresh(for: date)
-            objectWillChange.send()
         }
     }
 
