@@ -13,6 +13,12 @@ struct HomeView: View {
 					.padding(.horizontal, 16)
 					.padding(.top, 16)
 
+				if let persistenceMessage = viewModel.persistenceMessage {
+					persistenceBanner(message: persistenceMessage)
+						.padding(.horizontal, 16)
+						.padding(.top, 12)
+				}
+
 				dateStrip
 					.padding(.horizontal, 16)
 					.padding(.top, 16)
@@ -133,6 +139,8 @@ struct HomeView: View {
 							EventRow(event: event)
 						}
 					}
+				} else {
+					SectionEmptyState(part: section.part)
 				}
 
 				Button {
@@ -157,6 +165,23 @@ struct HomeView: View {
 				.buttonStyle(.plain)
 			}
 		}
+	}
+
+	private func persistenceBanner(message: String) -> some View {
+		HStack(alignment: .top, spacing: 10) {
+			Image(systemName: "exclamationmark.triangle.fill")
+				.font(.system(size: 14, weight: .semibold))
+				.foregroundStyle(theme.warning)
+
+			Text(message)
+				.font(.system(size: 13, weight: .medium))
+				.foregroundStyle(theme.textPrimary)
+				.frame(maxWidth: .infinity, alignment: .leading)
+		}
+		.padding(.horizontal, 12)
+		.padding(.vertical, 10)
+		.background(theme.surfaceAlt)
+		.clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
 	}
 
 	private var fab: some View {
@@ -194,7 +219,9 @@ private struct TaskRow: View {
 						.foregroundStyle(item.isDone ? theme.accent : theme.textSecondary)
 					Text(item.title)
 						.font(theme.bodyFont)
+						.strikethrough(item.isDone, color: theme.textSecondary)
 						.foregroundStyle(theme.textPrimary)
+						.opacity(item.isDone ? 0.6 : 1)
 					Spacer()
 				}
 			}
@@ -212,7 +239,7 @@ private struct TaskRow: View {
 		}
 		.padding(.horizontal, 12)
 		.padding(.vertical, 10)
-		.background(theme.surface)
+		.background(item.isDone ? theme.surfaceAlt : theme.surface)
 		.clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
 		.confirmationDialog("Move Task", isPresented: $showingMoveOptions, titleVisibility: .visible) {
 			ForEach(DayPart.plannerParts.filter { $0 != currentPart }) { part in
@@ -220,6 +247,63 @@ private struct TaskRow: View {
 					onMove(part)
 				}
 			}
+		}
+	}
+}
+
+private struct SectionEmptyState: View {
+	@Environment(\.appTheme) private var theme
+	let part: DayPart
+
+	var body: some View {
+		HStack(alignment: .top, spacing: 10) {
+			Image(systemName: iconName)
+				.font(.system(size: 18, weight: .semibold))
+				.foregroundStyle(theme.textSecondary)
+				.frame(width: 24)
+
+			VStack(alignment: .leading, spacing: 4) {
+				Text(title)
+					.font(.system(size: 15, weight: .semibold))
+					.foregroundStyle(theme.textPrimary)
+
+				Text(message)
+					.font(.system(size: 14, weight: .regular))
+					.foregroundStyle(theme.textSecondary)
+					.fixedSize(horizontal: false, vertical: true)
+			}
+
+			Spacer()
+		}
+		.padding(.horizontal, 14)
+		.padding(.vertical, 14)
+		.frame(maxWidth: .infinity, alignment: .leading)
+		.background(theme.surfaceAlt.opacity(0.8))
+		.overlay(
+			RoundedRectangle(cornerRadius: 14, style: .continuous)
+				.stroke(theme.divider, lineWidth: 1)
+		)
+		.clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+	}
+
+	private var iconName: String {
+		part == .inbox ? "tray" : "sparkles"
+	}
+
+	private var title: String {
+		part == .inbox ? "Inbox is clear" : "\(part.title) is open"
+	}
+
+	private var message: String {
+		switch part {
+		case .inbox:
+			"Capture loose tasks here so they are ready to sort later."
+		case .morning:
+			"Nothing scheduled yet for the start of your day."
+		case .midday:
+			"Your midday section is free right now."
+		case .evening:
+			"Evening is open. Add anything you want to close the day with."
 		}
 	}
 }

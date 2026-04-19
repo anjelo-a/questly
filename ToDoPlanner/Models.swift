@@ -54,6 +54,14 @@ enum TaskPriority: String, CaseIterable, Identifiable, Hashable, Codable {
 		case .high: "High"
 		}
 	}
+
+	var sortRank: Int {
+		switch self {
+		case .high: 0
+		case .medium: 1
+		case .low: 2
+		}
+	}
 }
 
 enum TaskRewardPoints: Int, CaseIterable, Identifiable, Hashable, Codable {

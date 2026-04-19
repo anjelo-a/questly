@@ -4,11 +4,17 @@ import SwiftUI
 @MainActor
 final class TaskStore: ObservableObject {
 	@Published private(set) var tasks: [TodoItem] = []
+	@Published private(set) var lastPersistenceErrorMessage: String?
 	private let persistence: TaskPersistence
 
 	init(persistence: TaskPersistence = TaskPersistence()) {
 		self.persistence = persistence
-		self.tasks = persistence.loadTasks()
+		do {
+			self.tasks = try persistence.loadTasks()
+		} catch {
+			self.tasks = []
+			self.lastPersistenceErrorMessage = "Saved tasks could not be restored. Questly started with an empty local list."
+		}
 	}
 
 	func tasks(for date: Date, dayPart: DayPart) -> [TodoItem] {
@@ -20,7 +26,7 @@ final class TaskStore: ObservableObject {
 				if dayPart == .inbox { return matchesDay && item.dayPart == .inbox }
 				return matchesDay && item.dayPart == dayPart
 			}
-			.sorted { ($0.dueDate ?? .distantPast) < ($1.dueDate ?? .distantPast) }
+			.sorted(by: taskSortComparator)
 	}
 
 	func addTask(
@@ -77,7 +83,35 @@ final class TaskStore: ObservableObject {
 	}
 
 	private func persistTasks() {
-		persistence.saveTasks(tasks)
+		do {
+			try persistence.saveTasks(tasks)
+			lastPersistenceErrorMessage = nil
+		} catch {
+			lastPersistenceErrorMessage = "Changes are visible now, but Questly could not save them to local storage."
+		}
+	}
+
+	private func taskSortComparator(_ lhs: TodoItem, _ rhs: TodoItem) -> Bool {
+		if lhs.isDone != rhs.isDone {
+			return rhs.isDone
+		}
+
+		let lhsDueDate = lhs.dueDate ?? .distantFuture
+		let rhsDueDate = rhs.dueDate ?? .distantFuture
+		if lhsDueDate != rhsDueDate {
+			return lhsDueDate < rhsDueDate
+		}
+
+		if lhs.priority.sortRank != rhs.priority.sortRank {
+			return lhs.priority.sortRank < rhs.priority.sortRank
+		}
+
+		let titleComparison = lhs.title.localizedCaseInsensitiveCompare(rhs.title)
+		if titleComparison != .orderedSame {
+			return titleComparison == .orderedAscending
+		}
+
+		return lhs.id.uuidString < rhs.id.uuidString
 	}
 }
 

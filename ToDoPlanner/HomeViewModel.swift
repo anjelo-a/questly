@@ -106,6 +106,7 @@ final class HomeViewModel: ObservableObject {
     @Published var selectedDate: Date
     @Published var newTaskViewModel: NewTaskViewModel?
     @Published private(set) var sections: [HomeSectionModel] = []
+    @Published private(set) var persistenceMessage: String?
 
     private let taskRepository: TaskRepository
     private let calendarRepository: CalendarRepository
@@ -179,6 +180,7 @@ final class HomeViewModel: ObservableObject {
         hasLoaded = true
         taskRepository.seedIfNeeded(for: selectedDate)
         reloadSections()
+        syncPersistenceState()
         refreshCalendar(for: selectedDate)
     }
 
@@ -186,22 +188,26 @@ final class HomeViewModel: ObservableObject {
         selectedDate = date
         taskRepository.seedIfNeeded(for: date)
         reloadSections()
+        syncPersistenceState()
         refreshCalendar(for: date)
     }
 
     func toggleDone(_ id: UUID) {
         taskRepository.toggleDone(id)
         reloadSections()
+        syncPersistenceState()
     }
 
     func addTask(_ draft: NewTaskDraft) {
         taskRepository.addTask(draft, for: selectedDate)
         reloadSections()
+        syncPersistenceState()
     }
 
     func moveTask(_ id: UUID, to dayPart: DayPart) {
         taskRepository.moveTask(id, to: dayPart, for: selectedDate)
         reloadSections()
+        syncPersistenceState()
     }
 
     func presentNewTask(for part: DayPart) {
@@ -248,6 +254,10 @@ final class HomeViewModel: ObservableObject {
                 entries: taskEntries + eventEntries
             )
         }
+    }
+
+    private func syncPersistenceState() {
+        persistenceMessage = taskRepository.lastPersistenceErrorMessage
     }
 
     private var isRunningInPreviews: Bool {

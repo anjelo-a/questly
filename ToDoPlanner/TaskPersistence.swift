@@ -25,27 +25,18 @@ struct TaskPersistence {
 			.appendingPathComponent("tasks.json", isDirectory: false)
 	}
 
-	func loadTasks() -> [TodoItem] {
+	func loadTasks() throws -> [TodoItem] {
 		guard fileManager.fileExists(atPath: storageURL.path) else { return [] }
 
-		do {
-			let data = try Data(contentsOf: storageURL)
-			return try decoder.decode([TodoItem].self, from: data)
-		} catch {
-			// If the file is unreadable or the schema changes later, start from empty state.
-			return []
-		}
+		let data = try Data(contentsOf: storageURL)
+		return try decoder.decode([TodoItem].self, from: data)
 	}
 
-	func saveTasks(_ tasks: [TodoItem]) {
+	func saveTasks(_ tasks: [TodoItem]) throws {
 		let directoryURL = storageURL.deletingLastPathComponent()
 
-		do {
-			try fileManager.createDirectory(at: directoryURL, withIntermediateDirectories: true)
-			let data = try encoder.encode(tasks)
-			try data.write(to: storageURL, options: [.atomic])
-		} catch {
-			// Persistence failure should not break the in-memory planner experience.
-		}
+		try fileManager.createDirectory(at: directoryURL, withIntermediateDirectories: true)
+		let data = try encoder.encode(tasks)
+		try data.write(to: storageURL, options: [.atomic])
 	}
 }
