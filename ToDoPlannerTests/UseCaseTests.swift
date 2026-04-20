@@ -37,9 +37,10 @@ final class UseCaseTests: XCTestCase {
 		let calendar = Calendar.current
 		let sourceDate = Date(timeIntervalSince1970: 1_710_000_000)
 		let targetDate = calendar.date(byAdding: .day, value: 1, to: sourceDate) ?? sourceDate
+		let uniqueTitle = "Inbox task \(UUID().uuidString)"
 
 		store.addTask(
-			title: "Inbox task",
+			title: uniqueTitle,
 			details: nil,
 			date: sourceDate,
 			dayPart: .inbox,
@@ -47,12 +48,18 @@ final class UseCaseTests: XCTestCase {
 			rewardPoints: .p25
 		)
 
-		let originalTask = try XCTUnwrap(store.tasks(for: sourceDate, dayPart: .inbox).first)
+		let originalTask = try XCTUnwrap(
+			store.tasks(for: sourceDate, dayPart: .inbox).first(where: { $0.title == uniqueTitle })
+		)
 		store.moveTask(originalTask.id, to: .morning, for: targetDate)
 
-		XCTAssertTrue(store.tasks(for: sourceDate, dayPart: .inbox).isEmpty)
+		XCTAssertFalse(
+			store.tasks(for: sourceDate, dayPart: .inbox).contains(where: { $0.id == originalTask.id })
+		)
 
-		let movedTask = try XCTUnwrap(store.tasks(for: targetDate, dayPart: .morning).first)
+		let movedTask = try XCTUnwrap(
+			store.tasks(for: targetDate, dayPart: .morning).first(where: { $0.id == originalTask.id })
+		)
 		XCTAssertEqual(movedTask.id, originalTask.id)
 		XCTAssertEqual(movedTask.dayPart, .morning)
 		XCTAssertTrue(calendar.isDate(movedTask.dueDate ?? .distantPast, inSameDayAs: targetDate))

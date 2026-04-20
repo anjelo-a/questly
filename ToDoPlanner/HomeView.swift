@@ -101,9 +101,7 @@ struct HomeView: View {
 					.font(.system(size: 15, weight: .semibold))
 					.foregroundStyle(theme.textSecondary)
 
-				TextField("Search tasks", text: $viewModel.searchText)
-					textInputAutocapitalization(.never)
-					.autocorrectionDisabled()
+					TextField("Search tasks", text: $viewModel.searchText)
 
 				if !viewModel.searchText.isEmpty {
 					Button {
@@ -121,22 +119,22 @@ struct HomeView: View {
 			.background(theme.surface)
 			.clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
 
-			HStack(spacing: 10) {
-				Picker("Task status", selection: $viewModel.completionFilter) {
-					ForEach(viewModel.completionFilterOptions) { option in
-						Text(option.title).tag(option)
+				HStack(spacing: 10) {
+					Picker("Task status", selection: $viewModel.completionFilter) {
+						ForEach(viewModel.completionFilterOptions, id: \.rawValue) { option in
+							Text(option.title).tag(option)
+						}
 					}
-				}
-				.pickerStyle(.segmented)
+					.pickerStyle(.segmented)
 
 				Menu {
-					Button("All priorities") {
-						viewModel.priorityFilter = nil
-					}
-					ForEach(TaskPriority.allCases) { priority in
-						Button {
-							viewModel.priorityFilter = priority
-						} label: {
+						Button("All priorities") {
+							viewModel.priorityFilter = nil
+						}
+						ForEach(TaskPriority.allCases, id: \.rawValue) { priority in
+							Button {
+								viewModel.priorityFilter = priority
+							} label: {
 							if viewModel.priorityFilter == priority {
 								Label(priority.title, systemImage: "checkmark")
 							} else {

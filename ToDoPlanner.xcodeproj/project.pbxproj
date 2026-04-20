@@ -245,6 +245,10 @@
 					001000000000000000000700 = {
 						CreatedOnToolsVersion = 15.0;
 					};
+					D14B0A7D2F9B220000BEEF01 = {
+						CreatedOnToolsVersion = 15.0;
+						TestTargetID = 001000000000000000000700;
+					};
 				};
 			};
 			buildConfigurationList = 001000000000000000000110 /* Build configuration list for PBXProject "ToDoPlanner" */;
@@ -303,8 +307,13 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ToDoPlanner.app/ToDoPlanner";
+				TEST_TARGET_NAME = ToDoPlanner;
 			};
 			name = Debug;
 		};
@@ -313,8 +322,13 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ToDoPlanner.app/ToDoPlanner";
+				TEST_TARGET_NAME = ToDoPlanner;
 			};
 			name = Release;
 		};
